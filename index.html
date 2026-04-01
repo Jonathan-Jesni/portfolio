@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 
-<body>
+<body class="parallax">
   <!-- ===== SCROLL PROGRESS BAR ===== -->
   <div id="progress-bar"></div>
 
@@ -56,9 +56,11 @@
       <p class="hero-greeting mono">Hi, my name is</p>
       <h1 class="hero-name">Jonathan<span class="accent">.</span></h1>
       <p class="hero-building mono">&gt; currently.building: smarter tools for real-world problems</p>
-      <h2 class="hero-tagline">I build AI-powered tools and systems<br />that solve real-world problems.</h2>
+      <h2 class="hero-tagline">I build <span class="text-shimmer">AI-powered</span> tools and <span
+          class="text-shimmer">systems</span><br />that solve real-world problems.</h2>
       <p class="hero-sub">Computer Science student focused on AI, cybersecurity, and scalable systems.</p>
-      <p class="hero-impact mono">Built and deployed 4 real-world systems across AI, cybersecurity, and large-scale data processing.</p>
+      <p class="hero-impact mono">Built and deployed 4 real-world systems across AI, cybersecurity, and large-scale data
+        processing.</p>
       <div class="hero-buttons">
         <a href="https://github.com/Jonathan-Jesni" target="_blank" rel="noopener" class="btn btn-primary"
           id="hero-github-btn">
@@ -105,16 +107,19 @@
       </h2>
 
       <!-- Project 1: Ludex -->
-      <article class="project-card reveal" id="project-ludex">
+      <article class="project-card reveal reveal-left" id="project-ludex">
         <div class="project-image hover-swap">
           <img src="assets/ludex-login.png" class="img-default" alt="Steam login integration for Ludex">
-          <img src="assets/ludex-recommendations.png" class="img-hover" alt="Ludex personalized game recommendations interface">
+          <img src="assets/ludex-recommendations.png" class="img-hover"
+            alt="Ludex personalized game recommendations interface">
         </div>
         <div class="project-info">
           <p class="project-overline mono">Featured Project</p>
           <h3 class="project-title">Ludex <span class="project-subtitle">— Hybrid Recommendation System</span></h3>
           <div class="project-description">
-            <p>A hybrid recommendation system combining TF-IDF content modeling with implicit-feedback collaborative filtering (ALS). Features anchor-based user profiling, score-normalized hybrid fusion, and MMR-based re-ranking to improve recommendation relevance and diversity with built-in cold-start handling.</p>
+            <p>A hybrid recommendation engine fusing TF-IDF content modeling with implicit-feedback collaborative
+              filtering (ALS). Serves personalized game recommendations via anchor-based profiling, score-normalized
+              fusion, and MMR-based re-ranking — handling cold-start users out of the box.</p>
           </div>
           <p class="project-built-with mono">Built with: Python, Scikit-learn, Implicit ALS, Steam API</p>
           <ul class="project-tags mono">
@@ -135,18 +140,30 @@
       </article>
 
       <!-- Project 2: File Converter -->
-      <article class="project-card project-card--reverse reveal" id="project-file-converter">
+      <article class="project-card project-card--reverse reveal reveal-right" id="project-file-converter">
         <div class="project-image placeholder-system">
-          <div class="system-box">
-            <p class="mono">Pipeline: PDF → Analysis → Rendering → DOCX</p>
+          <div class="pipeline-flow">
+            <span class="pipeline-step">PDF</span>
+            <span class="pipeline-arrow">→</span>
+            <span class="pipeline-step">Parse</span>
+            <span class="pipeline-arrow">→</span>
+            <span class="pipeline-step">Structure</span>
+            <span class="pipeline-arrow">→</span>
+            <span class="pipeline-step">Render</span>
+            <span class="pipeline-arrow">→</span>
+            <span class="pipeline-step">DOCX</span>
           </div>
         </div>
         <div class="project-info">
           <p class="project-overline mono">Featured Project</p>
-          <h3 class="project-title">File Converter <span class="project-subtitle">— Document Processing Engine</span></h3>
+          <h3 class="project-title">File Converter <span class="project-subtitle">— Document Processing Engine</span>
+          </h3>
           <div class="project-description">
-            <p>A deterministic two-pass document conversion engine that separates structural analysis from rendering. Performs paragraph reconstruction, list and heading detection, and conservative table extraction with fully explainable outputs — no OCR or machine learning.</p>
-            <p class="project-note">Currently evolving into a full document processing suite with multi-format conversion, PDF compression, and extended format support.</p>
+            <p>A deterministic two-pass document conversion engine — structural analysis separated from rendering.
+              Handles paragraph reconstruction, list detection, heading inference, and conservative table extraction
+              with fully explainable outputs. No OCR, no ML, fully deterministic.</p>
+            <p class="project-note">Evolving into a full document processing suite with multi-format conversion and
+              PDF compression.</p>
           </div>
           <p class="project-built-with mono">Built with: Python, Two-Pass Architecture</p>
           <ul class="project-tags mono">
@@ -167,7 +184,7 @@
       </article>
 
       <!-- Project 3: WebGuardian -->
-      <article class="project-card reveal" id="project-webguardian">
+      <article class="project-card reveal reveal-left" id="project-webguardian">
         <div class="project-image hover-swap">
           <img src="assets/webguardian-phishing.png" class="img-default" alt="Phishing detection warning overlay">
           <img src="assets/webguardian-safe.png" class="img-hover" alt="Safe website verification overlay">
@@ -176,8 +193,10 @@
           <p class="project-overline mono">Featured Project</p>
           <h3 class="project-title">WebGuardian <span class="project-subtitle">— Phishing Detection System</span></h3>
           <div class="project-description">
-            <p>A multimodal phishing detection system combining Char-CNN + LSTM (URL analysis) and MobileNetV2 (visual analysis) via late fusion. Achieves <strong>98.73% accuracy</strong> on <strong>3,000 webpages</strong> with <strong>~35ms inference</strong>, deployed as a Chrome extension for real-time detection.</p>
-            <p class="project-note">Deployed as a Chrome extension for real-time on-device phishing detection.</p>
+            <p>Multimodal phishing detection combining Char-CNN + LSTM (URL analysis) and MobileNetV2 (visual
+              analysis) via late fusion. Achieves <strong>98.73% accuracy</strong> on <strong>3,000 real-world
+                webpages</strong> with <strong>~35ms inference</strong> — deployed as a production Chrome extension
+              for real-time, on-device threat detection.</p>
           </div>
           <p class="project-built-with mono">Built with: Python, Char-CNN + LSTM, MobileNetV2, Chrome Extension</p>
           <ul class="project-tags mono">
@@ -198,16 +217,22 @@
       </article>
 
       <!-- Project 4: GPU Object Detection -->
-      <article class="project-card project-card--reverse reveal" id="project-gpu-detection">
+      <article class="project-card project-card--reverse reveal reveal-right" id="project-gpu-detection">
         <div class="project-image hover-swap">
-          <img src="assets/object-detection-main.png" class="img-default" alt="Synthetic object detection with bounding boxes">
+          <img src="assets/object-detection-main.png" class="img-default"
+            alt="Synthetic object detection with bounding boxes">
           <img src="assets/object-detection-alt.png" class="img-hover" alt="3D rendered scene without annotations">
         </div>
         <div class="project-info">
           <p class="project-overline mono">Featured Project</p>
-          <h3 class="project-title">Synthetic Data Object Detection <span class="project-subtitle">— Detection Pipeline</span></h3>
+          <h3 class="project-title">Synthetic Data Object Detection <span class="project-subtitle">— Detection
+              Pipeline</span></h3>
           <div class="project-description">
-            <p>An end-to-end object detection pipeline trained entirely on synthetic data generated in Blender with randomized 3D scenes. YOLOv8 Nano trained on 640×640 renders, achieving <strong>0.997 precision</strong>, <strong>1.000 recall</strong>, and <strong>0.995 mAP@50</strong> on the validation set.</p>
+            <p>End-to-end object detection trained on <strong>zero real-world images</strong> — entirely synthetic
+              data generated in Blender with randomized 3D scenes. YOLOv8 Nano on 640×640 renders achieves
+              <strong>0.997 precision</strong>, <strong>1.000 recall</strong>, and <strong>0.995 mAP@50</strong>,
+              proving synthetic-only training can match real-data performance.
+            </p>
           </div>
           <p class="project-built-with mono">Built with: Python, Blender, YOLOv8, Ultralytics</p>
           <ul class="project-tags mono">
@@ -311,8 +336,11 @@
         <div class="about-text">
           <p>I'm a Computer Science student who builds real tools — not just coursework. My focus areas are
             <strong>AI</strong>, <strong>cybersecurity</strong>, and <strong>systems design</strong>, and I gravitate
-            toward projects that solve practical, tangible problems.</p>
-          <p>Whether it's building a multimodal phishing detector deployed as a browser extension, generating synthetic training data in Blender, or engineering a deterministic document converter — I care about software that works in the real world.</p>
+            toward projects that solve practical, tangible problems.
+          </p>
+          <p>Whether it's building a multimodal phishing detector deployed as a browser extension, generating synthetic
+            training data in Blender, or engineering a deterministic document converter — I care about software that
+            works in the real world.</p>
           <p>I'm always working on something new. Currently leveling up and looking for opportunities to build at scale.
           </p>
         </div>
@@ -335,7 +363,8 @@
             <span class="mono">In Progress</span>
           </div>
           <h3>Document Processing Suite</h3>
-          <p>Expanding the File Converter into a full document processing system with multi-format conversion, document compression, and extended format support.</p>
+          <p>Expanding the File Converter into a full document processing system with multi-format conversion, document
+            compression, and extended format support.</p>
           <ul class="project-tags mono">
             <li>Python</li>
             <li>Document Processing</li>
