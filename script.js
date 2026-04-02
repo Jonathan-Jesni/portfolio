@@ -30,8 +30,8 @@ function registerElements() {
     scrollElements.push({
       el,
       type: isLeft ? 'left' : isRight ? 'right' : 'up',
-      offsetX: isLeft ? -70 : isRight ? 70 : 0,
-      offsetY: isLeft || isRight ? 0 : 40,
+      offsetX: isLeft ? -120 : isRight ? 120 : 0,
+      offsetY: isLeft || isRight ? 0 : 60,
       isHero,
       isSkill: false,
       isProjectCard: el.classList.contains('project-card'),
@@ -190,8 +190,8 @@ function applyScrollTransforms(scrollY, viewportHeight, time) {
     const baseScale = 0.96 + 0.04 * progress;
     const scale = baseScale * item.scaleMul;
 
-    // Non-linear slide easing: (1-progress)^1.4 for stronger entry, smoother finish
-    const slideEase = Math.pow(1 - progress, 1.4);
+    // Non-linear slide easing: (1-progress)^1.8 for stronger entry, smoother finish
+    const slideEase = Math.pow(1 - progress, 1.8);
     const translateX = item.offsetX * slideEase * mobileFactor * velocityBoost * item.parallaxMul;
     const translateY = item.offsetY * (1 - progress) * mobileFactor * velocityBoost * item.parallaxMul;
 
@@ -218,7 +218,7 @@ function applyScrollTransforms(scrollY, viewportHeight, time) {
     }
 
     // Default + project cards
-    const blurMul = isMobile ? 0 : 0.8;
+    const blurMul = isMobile ? 0 : 0.5;
     const blurAmount = blurCurve * blurMul;
     const finalScale = scale * idleScale;
 
@@ -448,14 +448,18 @@ if (!isMobile) {
     btnStates.push({ el: btn, cx: 0, cy: 0, cs: 1, tx: 0, ty: 0, ts: 1 });
   });
 
-  // --- 3D Tilt (project cards) ---
+  // --- 3D Tilt (project cards) + Micro Parallax on images ---
   const projectCards = document.querySelectorAll('.project-card');
   const tiltStates = [];
   projectCards.forEach(card => {
+    const imgContainer = card.querySelector('.project-image');
     tiltStates.push({
       el: card,
+      imgEl: imgContainer,
       rx: 0, ry: 0,   // Current rotation
       trx: 0, try: 0, // Target rotation
+      imgTx: 0, imgTy: 0, imgScale: 1,       // Current image parallax
+      imgTtx: 0, imgTty: 0, imgTscale: 1,    // Target image parallax
       inside: false,
     });
 
@@ -469,6 +473,9 @@ if (!isMobile) {
         state.inside = false;
         state.trx = 0;
         state.try = 0;
+        state.imgTtx = 0;
+        state.imgTty = 0;
+        state.imgTscale = 1;
       }
     });
     card.addEventListener('mousemove', (e) => {
@@ -482,6 +489,10 @@ if (!isMobile) {
       const ny = (e.clientY - cy) / (rect.height * 0.5);
       state.trx = -ny * 5;  // Max 5 degrees
       state.try = nx * 5;
+      // Micro parallax on image: max ±8px, slight scale
+      state.imgTtx = nx * 8;
+      state.imgTty = ny * 8;
+      state.imgTscale = 1.025;
     });
   });
 
@@ -570,21 +581,38 @@ if (!isMobile) {
       }
     }
 
-    // 6. 3D Tilt on project cards
+    // 6. 3D Tilt on project cards + image micro-parallax
     for (let i = 0; i < tiltStates.length; i++) {
       const t = tiltStates[i];
       // Smooth interpolation toward target
       t.rx += (t.trx - t.rx) * 0.1;
       t.ry += (t.try - t.ry) * 0.1;
 
+      // Image parallax interpolation
+      t.imgTx += (t.imgTtx - t.imgTx) * 0.08;
+      t.imgTy += (t.imgTty - t.imgTy) * 0.08;
+      t.imgScale += (t.imgTscale - t.imgScale) * 0.08;
+
       // Snap to zero when very close
       if (!t.inside && Math.abs(t.rx) < 0.05 && Math.abs(t.ry) < 0.05) {
         t.rx = 0;
         t.ry = 0;
       }
+      if (!t.inside && Math.abs(t.imgTx) < 0.1 && Math.abs(t.imgTy) < 0.1 && Math.abs(t.imgScale - 1) < 0.001) {
+        t.imgTx = 0;
+        t.imgTy = 0;
+        t.imgScale = 1;
+      }
 
       if (t.rx !== 0 || t.ry !== 0) {
         t.el.style.transform = `rotateX(${t.rx.toFixed(2)}deg) rotateY(${t.ry.toFixed(2)}deg)`;
+      }
+
+      // Apply micro-parallax to project image
+      if (t.imgEl && (t.imgTx !== 0 || t.imgTy !== 0 || t.imgScale !== 1)) {
+        t.imgEl.style.transform = `translate(${t.imgTx.toFixed(1)}px, ${t.imgTy.toFixed(1)}px) scale(${t.imgScale.toFixed(4)})`;
+      } else if (t.imgEl) {
+        t.imgEl.style.transform = '';
       }
     }
 
@@ -593,3 +621,18 @@ if (!isMobile) {
 
   animateCursorEffects();
 }
+
+// ============================================
+// SUBTLE SECTION DEPTH FEEDBACK
+// ============================================
+document.querySelectorAll('section').forEach(section => {
+  section.addEventListener('mouseenter', () => {
+    section.style.transition = 'filter 0.6s ease, transform 0.6s ease';
+    section.style.filter = 'brightness(1.02)';
+    section.style.transform = 'scale(1.002)';
+  });
+  section.addEventListener('mouseleave', () => {
+    section.style.filter = '';
+    section.style.transform = '';
+  });
+});
