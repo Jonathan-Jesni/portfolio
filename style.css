@@ -600,18 +600,20 @@ section {
   margin-bottom: 100px;
   perspective: 1000px;
   transform-style: preserve-3d;
-  transition: box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease;
+  /* NO transform transition — JS drives transform via rAF to prevent stutter */
+  transition: box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease;
   border-radius: 12px;
   border: 1px solid transparent;
   overflow: hidden;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 .project-card:hover {
-  transform: translateY(-6px) scale(1.01);
+  /* transform is handled entirely by JS (scroll + tilt) — no CSS transform here */
   box-shadow:
-    0 20px 60px rgba(100, 255, 218, 0.15),
-    0 8px 24px rgba(0, 0, 0, 0.3),
-    inset 0 0 30px rgba(100, 255, 218, 0.03);
+    0 10px 24px rgba(100, 255, 218, 0.1),
+    0 4px 12px rgba(0, 0, 0, 0.2);
   border-color: rgba(100, 255, 218, 0.15);
 }
 
@@ -624,7 +626,7 @@ section {
   opacity: 0;
   transition: opacity 0.4s ease;
   border-radius: inherit;
-  background: radial-gradient(300px circle at var(--sx, 50%) var(--sy, 50%),
+  background: radial-gradient(220px circle at var(--sx, 50%) var(--sy, 50%),
       rgba(100, 255, 218, 0.08),
       rgba(100, 255, 218, 0.03) 40%,
       transparent 70%);
@@ -733,9 +735,9 @@ section {
   box-shadow: 0 12px 48px rgba(100, 255, 218, 0.18);
 }
 
-/* Project image micro-parallax transition for smoothness */
+/* Project image — no transform transition (JS drives it via rAF) */
 .project-image {
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+  transition: box-shadow 0.4s ease;
 }
 
 /* File Converter pipeline placeholder */
@@ -1103,6 +1105,11 @@ section {
 /* Section depth transition */
 section {
   transform-origin: center center;
+  transition: filter 0.6s ease;
+}
+
+section.section-depth-active {
+  filter: brightness(1.02);
 }
 
 /* ============================================

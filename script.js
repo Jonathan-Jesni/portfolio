@@ -30,8 +30,8 @@ function registerElements() {
     scrollElements.push({
       el,
       type: isLeft ? 'left' : isRight ? 'right' : 'up',
-      offsetX: isLeft ? -120 : isRight ? 120 : 0,
-      offsetY: isLeft || isRight ? 0 : 60,
+      offsetX: isLeft ? -105 : isRight ? 105 : 0,
+      offsetY: isLeft || isRight ? 0 : 52,
       isHero,
       isSkill: false,
       isProjectCard: el.classList.contains('project-card'),
@@ -42,8 +42,8 @@ function registerElements() {
       cachedTop: 0,
       cachedHeight: 0,
       // Lerp state for smooth interpolation
-      sx: isLeft ? -120 : isRight ? 120 : 0,
-      sy: isLeft || isRight ? 0 : 60,
+      sx: isLeft ? -105 : isRight ? 105 : 0,
+      sy: isLeft || isRight ? 0 : 52,
       ss: 0.96,
       so: 0,
     });
@@ -154,8 +154,8 @@ let idleTime = 0; // Accumulates when not scrolling
 function getIdleFloat(index, time) {
   // Each element gets a unique phase based on index
   const phase = index * 0.7;
-  const y = Math.sin(time * 0.8 + phase) * 0.8;  // ±0.8px
-  const s = 1 + Math.sin(time * 0.6 + phase + 1.5) * 0.002; // ±0.002 scale
+  const y = Math.sin(time * 0.8 + phase) * 0.7;  // ±0.7px (reduced ~12%)
+  const s = 1 + Math.sin(time * 0.6 + phase + 1.5) * 0.0017; // ±0.0017 scale (reduced ~15%)
   return { y, s };
 }
 
@@ -166,19 +166,21 @@ const mobileFactor = isMobile ? 0.5 : 1;
 
 function applyScrollTransforms(scrollY, viewportHeight, time) {
   const lerpFactor = 0.12;
+  const projectLerpFactor = 0.09;
   // Idle blend: ramp up floating when scroll stops
   const idleBlend = isScrolling ? 0 : Math.min(scrollIdleTimer * 0.3, 1);
 
   scrollElements.forEach((item, idx) => {
     if (item.isHero) {
       const heroFloat = Math.sin(time * 0.4) * 1.2;
-      item.el.style.opacity = '1';
-      item.el.style.transform = `translate(0, ${heroFloat.toFixed(2)}px) scale(1)`;
-      item.el.style.filter = '';
+      item.el.style.cssText = `opacity:1;transform:translate(0,${heroFloat.toFixed(2)}px) scale(1);filter:none;`;
       return;
     }
 
     let progress = getElementProgress(item, scrollY, viewportHeight);
+
+    // Skip offscreen elements — no DOM writes needed
+    if (progress <= 0 && item.so < 0.01) return;
 
     // Per-element organic delay
     if (item.delayOffset > 0 && progress > 0 && progress < 1) {
@@ -197,7 +199,9 @@ function applyScrollTransforms(scrollY, viewportHeight, time) {
     const targetScale = baseScale * item.scaleMul;
 
     // Softer slide easing: (1-progress)^1.4 — smoother deceleration, less abrupt
-    const slideEase = Math.pow(1 - progress, 1.4);
+    const slideEase = item.isProjectCard
+      ? Math.pow(1 - progress, 1.6)
+      : Math.pow(1 - progress, 1.4);
     // No velocityBoost on translation — eliminates scroll-spike jitter
     const targetX = item.offsetX * slideEase * mobileFactor * item.parallaxMul;
     const targetY = item.offsetY * (1 - progress) * mobileFactor * item.parallaxMul;
@@ -216,10 +220,11 @@ function applyScrollTransforms(scrollY, viewportHeight, time) {
     }
 
     // Lerp toward targets
-    item.sx += (targetX - item.sx) * lerpFactor;
-    item.sy += (targetY - item.sy) * lerpFactor;
-    item.ss += (targetScale - item.ss) * lerpFactor;
-    item.so += (targetOpacity - item.so) * lerpFactor;
+    const lf = item.isProjectCard ? projectLerpFactor : lerpFactor;
+    item.sx += (targetX - item.sx) * lf;
+    item.sy += (targetY - item.sy) * lf;
+    item.ss += (targetScale - item.ss) * lf;
+    item.so += (targetOpacity - item.so) * lf;
 
     // Micro-jitter clamp — snap when delta is negligible
     if (Math.abs(targetX - item.sx) < 0.05) item.sx = targetX;
@@ -233,30 +238,24 @@ function applyScrollTransforms(scrollY, viewportHeight, time) {
       const blurMul = isMobile ? 0 : 2.0;
       const blurAmount = blurCurve * blurMul;
 
-      item.el.style.opacity = item.so.toFixed(3);
-      item.el.style.transform =
-        `translate(${item.sx.toFixed(1)}px, ${(parallaxY + idleY).toFixed(2)}px) scale(${finalScale.toFixed(4)})`;
-      item.el.style.filter = blurAmount > 0.05 ? `blur(${blurAmount.toFixed(2)}px)` : 'none';
+      item.el.style.cssText = `opacity:${item.so.toFixed(2)};transform:translate(${item.sx.toFixed(1)}px,${(parallaxY + idleY).toFixed(2)}px) scale(${finalScale.toFixed(2)});filter:${blurAmount > 0.05 ? `blur(${blurAmount.toFixed(2)}px)` : 'none'};will-change:opacity,transform,filter;`;
       return;
     }
 
-    // Default + project cards — reduced blur (0.25) for cleaner rendering
-    const blurMul = isMobile ? 0 : 0.25;
+    // Default + project cards — no filter for project cards; disable blur during scroll for others
+    const blurMul = item.isProjectCard ? 0 : ((isMobile || isScrolling) ? 0 : 0.25);
     const blurAmount = blurCurve * blurMul;
     const finalScale = item.ss * idleScale;
+    const filterVal = blurAmount > 0.05 ? `blur(${blurAmount.toFixed(2)}px)` : 'none';
 
     const scrollTransform =
-      `translate(${item.sx.toFixed(1)}px, ${(item.sy + idleY).toFixed(2)}px) scale(${finalScale.toFixed(4)})`;
-
-    item.el.style.opacity = item.so.toFixed(3);
-    item.el.style.filter = blurAmount > 0.05 ? `blur(${blurAmount.toFixed(2)}px)` : 'none';
+      `translate(${item.sx.toFixed(1)}px,${(item.sy + idleY).toFixed(2)}px) scale(${finalScale.toFixed(2)})`;
 
     // Store scroll transform — tilt system will combine when hovering
     item.el.__scrollTransform = scrollTransform;
 
-    if (!item.isProjectCard || !item.el.__isHovered) {
-      item.el.style.transform = scrollTransform;
-    }
+    // Single batched DOM write — opacity + transform + filter in one shot
+    item.el.style.cssText = `opacity:${item.so.toFixed(2)};transform:${scrollTransform};filter:${filterVal};will-change:transform;`;
   });
 }
 
@@ -482,10 +481,10 @@ if (!isMobile) {
   // --- 3D Tilt (project cards) + Micro Parallax on images ---
   const projectCards = document.querySelectorAll('.project-card');
   const tiltStates = [];
-  projectCards.forEach(card => {
+  projectCards.forEach((card, index) => {
     const imgContainer = card.querySelector('.project-image');
     const spotlightEl = card.querySelector('.card-spotlight');
-    tiltStates.push({
+    const state = {
       el: card,
       imgEl: imgContainer,
       spotlightEl: spotlightEl,
@@ -494,46 +493,38 @@ if (!isMobile) {
       imgTx: 0, imgTy: 0, imgScale: 1,       // Current image parallax
       imgTtx: 0, imgTty: 0, imgTscale: 1,    // Target image parallax
       inside: false,
-    });
+      // Cached rect — updated in rAF, never in event handlers
+      cachedRect: null,
+    };
+    tiltStates.push(state);
 
+    // Direct reference — no .find() needed
+    // Micro delay prevents harsh instant tilt activation on fast cursor passes
+    let hoverTimeout;
     card.addEventListener('mouseenter', () => {
-      const state = tiltStates.find(s => s.el === card);
-      if (state) state.inside = true;
-      card.__isHovered = true;
+      hoverTimeout = setTimeout(() => {
+        state.inside = true;
+        card.__isHovered = true;
+      }, 40);
     });
     card.addEventListener('mouseleave', () => {
-      const state = tiltStates.find(s => s.el === card);
+      clearTimeout(hoverTimeout);
       card.__isHovered = false;
-      if (state) {
-        state.inside = false;
-        state.trx = 0;
-        state.try = 0;
-        state.imgTtx = 0;
-        state.imgTty = 0;
-        state.imgTscale = 1;
-      }
+      state.inside = false;
+      state.trx = 0;
+      state.try = 0;
+      state.imgTtx = 0;
+      state.imgTty = 0;
+      state.imgTscale = 1;
     });
-    card.addEventListener('mousemove', (e) => {
-      const state = tiltStates.find(s => s.el === card);
-      if (!state) return;
-      const rect = card.getBoundingClientRect();
-      const cx = rect.left + rect.width * 0.5;
-      const cy = rect.top + rect.height * 0.5;
-      // Normalize to -1..1
-      const nx = (e.clientX - cx) / (rect.width * 0.5);
-      const ny = (e.clientY - cy) / (rect.height * 0.5);
-      state.trx = -ny * 5;  // Max 5 degrees
-      state.try = nx * 5;
-      // Micro parallax on image: max ±8px, slight scale
-      state.imgTtx = nx * 8;
-      state.imgTty = ny * 8;
-      state.imgTscale = 1.025;
-    });
+    // mousemove: just record mouse position — tilt calculated in rAF
+    // No getBoundingClientRect() here — that's the key perf fix
   });
 
   // --- Spotlight ---
   // Show spotlight after first mouse movement
   let spotlightActive = false;
+  let lastSpotlightVal = '0';
 
   // --- Unified cursor animation loop ---
   function animateCursorEffects() {
@@ -569,9 +560,15 @@ if (!isMobile) {
     smoothMouseY += (mouseY - smoothMouseY) * 0.12;
     if (!spotlightActive && (mouseX !== 0 || mouseY !== 0)) {
       spotlightActive = true;
-      document.body.style.setProperty('--spotlight-opacity', '1');
     }
-    if (spotlightActive) {
+    // Disable heavy spotlight gradient during fast scrolling — only update when value changes
+    const isFastScroll = Math.abs(smoothVelocity) > 2;
+    const newSpotlightVal = (spotlightActive && !isFastScroll) ? '1' : '0';
+    if (newSpotlightVal !== lastSpotlightVal) {
+      document.body.style.setProperty('--spotlight-opacity', newSpotlightVal);
+      lastSpotlightVal = newSpotlightVal;
+    }
+    if (spotlightActive && !isFastScroll) {
       document.body.style.setProperty('--mx', smoothMouseX.toFixed(0) + 'px');
       document.body.style.setProperty('--my', smoothMouseY.toFixed(0) + 'px');
     }
@@ -619,9 +616,25 @@ if (!isMobile) {
     // 6. 3D Tilt on project cards + image micro-parallax
     for (let i = 0; i < tiltStates.length; i++) {
       const t = tiltStates[i];
-      // Smooth interpolation toward target
-      t.rx += (t.trx - t.rx) * 0.1;
-      t.ry += (t.try - t.ry) * 0.1;
+
+      // Update tilt targets from mouse position inside rAF (no getBoundingClientRect in events)
+      if (t.inside) {
+        const rect = t.el.getBoundingClientRect();
+        t.cachedRect = rect;
+        const cx = rect.left + rect.width * 0.5;
+        const cy = rect.top + rect.height * 0.5;
+        const nx = (mouseX - cx) / (rect.width * 0.5);
+        const ny = (mouseY - cy) / (rect.height * 0.5);
+        t.trx = -ny * 5;
+        t.try = nx * 5;
+        t.imgTtx = nx * 8;
+        t.imgTty = ny * 8;
+        t.imgTscale = 1.025;
+      }
+
+      // Smooth interpolation toward target (0.06 = softer than 0.1, prevents stutter)
+      t.rx += (t.trx - t.rx) * 0.06;
+      t.ry += (t.try - t.ry) * 0.06;
 
       // Image parallax interpolation
       t.imgTx += (t.imgTtx - t.imgTx) * 0.08;
@@ -639,11 +652,13 @@ if (!isMobile) {
         t.imgScale = 1;
       }
 
-      if (t.rx !== 0 || t.ry !== 0) {
+      // Only append tilt rotation when meaningful (avoids unnecessary transform writes)
+      const hasTilt = Math.abs(t.rx) > 0.01 || Math.abs(t.ry) > 0.01;
+
+      if (hasTilt) {
         const scrollT = t.el.__scrollTransform || '';
-        t.el.style.transform = `${scrollT} rotateX(${t.rx.toFixed(2)}deg) rotateY(${t.ry.toFixed(2)}deg)`;
-      } else if (t.el.__scrollTransform) {
-        t.el.style.transform = t.el.__scrollTransform;
+        t.el.style.transform =
+          `${scrollT} rotateX(${t.rx.toFixed(2)}deg) rotateY(${t.ry.toFixed(2)}deg)`;
       }
 
       // Apply micro-parallax to project image
@@ -653,11 +668,10 @@ if (!isMobile) {
         t.imgEl.style.transform = '';
       }
 
-      // 7. Magnetic spotlight — update CSS vars from cursor position
-      if (t.spotlightEl && t.inside) {
-        const rect = t.el.getBoundingClientRect();
-        const sx = ((mouseX - rect.left) / rect.width) * 100;
-        const sy = ((mouseY - rect.top) / rect.height) * 100;
+      // 7. Magnetic spotlight — use cached rect from above (no extra reflow)
+      if (t.spotlightEl && t.inside && t.cachedRect) {
+        const sx = ((mouseX - t.cachedRect.left) / t.cachedRect.width) * 100;
+        const sy = ((mouseY - t.cachedRect.top) / t.cachedRect.height) * 100;
         t.spotlightEl.style.setProperty('--sx', sx.toFixed(1) + '%');
         t.spotlightEl.style.setProperty('--sy', sy.toFixed(1) + '%');
       }
@@ -671,15 +685,13 @@ if (!isMobile) {
 
 // ============================================
 // SUBTLE SECTION DEPTH FEEDBACK
+// (Uses class toggle instead of inline styles to avoid layout thrashing during scroll)
 // ============================================
 document.querySelectorAll('section').forEach(section => {
   section.addEventListener('mouseenter', () => {
-    section.style.transition = 'filter 0.6s ease, transform 0.6s ease';
-    section.style.filter = 'brightness(1.02)';
-    section.style.transform = 'scale(1.002)';
+    section.classList.add('section-depth-active');
   });
   section.addEventListener('mouseleave', () => {
-    section.style.filter = '';
-    section.style.transform = '';
+    section.classList.remove('section-depth-active');
   });
 });
