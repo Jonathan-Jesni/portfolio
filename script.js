@@ -41,6 +41,11 @@ function registerElements() {
       delayOffset: seed * 0.04,            // 0–0.04
       cachedTop: 0,
       cachedHeight: 0,
+      // Lerp state for smooth interpolation
+      sx: isLeft ? -120 : isRight ? 120 : 0,
+      sy: isLeft || isRight ? 0 : 60,
+      ss: 0.96,
+      so: 0,
     });
   });
 
@@ -61,6 +66,7 @@ function registerElements() {
       delayOffset: seed * 0.03,
       cachedTop: 0,
       cachedHeight: 0,
+      sx: 0, sy: 30, ss: 0.96, so: 0,
     });
   });
 
@@ -81,6 +87,7 @@ function registerElements() {
       delayOffset: seed * 0.03,
       cachedTop: 0,
       cachedHeight: 0,
+      sx: 0, sy: 30, ss: 0.96, so: 0,
     });
   });
 
@@ -158,8 +165,7 @@ function getIdleFloat(index, time) {
 const mobileFactor = isMobile ? 0.5 : 1;
 
 function applyScrollTransforms(scrollY, viewportHeight, time) {
-  // Reduced velocity boost (max 6% — gentler, more gliding motion)
-  const velocityBoost = 1 + Math.min(Math.abs(smoothVelocity) * 0.0015, 0.06);
+  const lerpFactor = 0.12;
   // Idle blend: ramp up floating when scroll stops
   const idleBlend = isScrolling ? 0 : Math.min(scrollIdleTimer * 0.3, 1);
 
@@ -186,46 +192,71 @@ function applyScrollTransforms(scrollY, viewportHeight, time) {
       progress = easeOutCubic(progress);
     }
 
-    const opacity = progress;
+    const targetOpacity = progress;
     const baseScale = 0.96 + 0.04 * progress;
-    const scale = baseScale * item.scaleMul;
+    const targetScale = baseScale * item.scaleMul;
 
-    // Non-linear slide easing: (1-progress)^1.8 for stronger entry, smoother finish
-    const slideEase = Math.pow(1 - progress, 1.8);
-    const translateX = item.offsetX * slideEase * mobileFactor * velocityBoost * item.parallaxMul;
-    const translateY = item.offsetY * (1 - progress) * mobileFactor * velocityBoost * item.parallaxMul;
+    // Softer slide easing: (1-progress)^1.4 — smoother deceleration, less abrupt
+    const slideEase = Math.pow(1 - progress, 1.4);
+    // No velocityBoost on translation — eliminates scroll-spike jitter
+    const targetX = item.offsetX * slideEase * mobileFactor * item.parallaxMul;
+    const targetY = item.offsetY * (1 - progress) * mobileFactor * item.parallaxMul;
 
     // Non-linear blur: drops off faster near visibility (power curve)
     const blurRaw = 1 - progress;
-    const blurCurve = Math.pow(blurRaw, 2.2); // Faster falloff near visible
+    const blurCurve = Math.pow(blurRaw, 2.2);
 
-    // Idle float (only when element is visible)
-    const idle = progress > 0.5 ? getIdleFloat(idx, time) : { y: 0, s: 1 };
-    const idleY = idle.y * idleBlend;
-    const idleScale = 1 + (idle.s - 1) * idleBlend;
+    // Idle float — disabled for project cards to prevent wobble during reveal
+    let idleY = 0;
+    let idleScale = 1;
+    if (!item.isProjectCard && progress > 0.5) {
+      const idle = getIdleFloat(idx, time);
+      idleY = idle.y * idleBlend;
+      idleScale = 1 + (idle.s - 1) * idleBlend;
+    }
+
+    // Lerp toward targets
+    item.sx += (targetX - item.sx) * lerpFactor;
+    item.sy += (targetY - item.sy) * lerpFactor;
+    item.ss += (targetScale - item.ss) * lerpFactor;
+    item.so += (targetOpacity - item.so) * lerpFactor;
+
+    // Micro-jitter clamp — snap when delta is negligible
+    if (Math.abs(targetX - item.sx) < 0.05) item.sx = targetX;
+    if (Math.abs(targetY - item.sy) < 0.05) item.sy = targetY;
+    if (Math.abs(targetScale - item.ss) < 0.0005) item.ss = targetScale;
+    if (Math.abs(targetOpacity - item.so) < 0.005) item.so = targetOpacity;
 
     if (item.isSkill) {
-      const parallaxY = translateY + blurRaw * 10 * mobileFactor * item.parallaxMul;
-      const finalScale = scale * idleScale;
+      const parallaxY = item.sy + blurRaw * 10 * mobileFactor * item.parallaxMul;
+      const finalScale = item.ss * idleScale;
       const blurMul = isMobile ? 0 : 2.0;
       const blurAmount = blurCurve * blurMul;
 
-      item.el.style.opacity = opacity.toFixed(3);
+      item.el.style.opacity = item.so.toFixed(3);
       item.el.style.transform =
-        `translate(${translateX.toFixed(1)}px, ${(parallaxY + idleY).toFixed(2)}px) scale(${finalScale.toFixed(4)})`;
+        `translate(${item.sx.toFixed(1)}px, ${(parallaxY + idleY).toFixed(2)}px) scale(${finalScale.toFixed(4)})`;
       item.el.style.filter = blurAmount > 0.05 ? `blur(${blurAmount.toFixed(2)}px)` : 'none';
       return;
     }
 
-    // Default + project cards
-    const blurMul = isMobile ? 0 : 0.35;
+    // Default + project cards — reduced blur (0.25) for cleaner rendering
+    const blurMul = isMobile ? 0 : 0.25;
     const blurAmount = blurCurve * blurMul;
-    const finalScale = scale * idleScale;
+    const finalScale = item.ss * idleScale;
 
-    item.el.style.opacity = opacity.toFixed(3);
-    item.el.style.transform =
-      `translate(${translateX.toFixed(1)}px, ${(translateY + idleY).toFixed(2)}px) scale(${finalScale.toFixed(4)})`;
+    const scrollTransform =
+      `translate(${item.sx.toFixed(1)}px, ${(item.sy + idleY).toFixed(2)}px) scale(${finalScale.toFixed(4)})`;
+
+    item.el.style.opacity = item.so.toFixed(3);
     item.el.style.filter = blurAmount > 0.05 ? `blur(${blurAmount.toFixed(2)}px)` : 'none';
+
+    // Store scroll transform — tilt system will combine when hovering
+    item.el.__scrollTransform = scrollTransform;
+
+    if (!item.isProjectCard || !item.el.__isHovered) {
+      item.el.style.transform = scrollTransform;
+    }
   });
 }
 
@@ -468,9 +499,11 @@ if (!isMobile) {
     card.addEventListener('mouseenter', () => {
       const state = tiltStates.find(s => s.el === card);
       if (state) state.inside = true;
+      card.__isHovered = true;
     });
     card.addEventListener('mouseleave', () => {
       const state = tiltStates.find(s => s.el === card);
+      card.__isHovered = false;
       if (state) {
         state.inside = false;
         state.trx = 0;
@@ -607,7 +640,10 @@ if (!isMobile) {
       }
 
       if (t.rx !== 0 || t.ry !== 0) {
-        t.el.style.transform = `rotateX(${t.rx.toFixed(2)}deg) rotateY(${t.ry.toFixed(2)}deg)`;
+        const scrollT = t.el.__scrollTransform || '';
+        t.el.style.transform = `${scrollT} rotateX(${t.rx.toFixed(2)}deg) rotateY(${t.ry.toFixed(2)}deg)`;
+      } else if (t.el.__scrollTransform) {
+        t.el.style.transform = t.el.__scrollTransform;
       }
 
       // Apply micro-parallax to project image
