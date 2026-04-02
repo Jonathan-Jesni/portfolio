@@ -1,0 +1,200 @@
+/* ============================================
+   CURSOR & SPOTLIGHT EFFECTS
+   ============================================ */
+
+/* Background gradient overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: -20% 0;
+  background: radial-gradient(circle at 20% 30%, rgba(100, 255, 218, 0.04), transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(100, 255, 218, 0.03), transparent 50%);
+  z-index: -1;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* Cursor spotlight overlay — dual layer for realistic falloff */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(250px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(100, 255, 218, 0.07),
+      rgba(100, 255, 218, 0.02) 40%,
+      transparent 55%),
+    radial-gradient(800px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(100, 255, 218, 0.02),
+      transparent 70%);
+  z-index: 0;
+  pointer-events: none;
+  opacity: var(--spotlight-opacity, 0);
+  transition: opacity 0.5s ease;
+}
+
+/* Parallax background shift */
+body.parallax::before {
+  transform: translateY(var(--scrollY, 0px));
+}
+
+/* Cursor Glow Effect (trailing via JS rAF) */
+.cursor-glow {
+  position: fixed;
+  width: 140px;
+  height: 140px;
+  background: radial-gradient(circle, rgba(100, 255, 218, 0.2), transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 999;
+  mix-blend-mode: screen;
+  filter: blur(20px);
+  transition: none;
+  opacity: 0;
+  animation: cursorFadeIn 0.5s ease forwards 0.3s;
+}
+
+/* Cursor trail particles */
+.cursor-trail {
+  position: fixed;
+  width: 50px;
+  height: 50px;
+  background: radial-gradient(circle, rgba(100, 255, 218, 0.15), transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 998;
+  mix-blend-mode: screen;
+  filter: blur(10px);
+  opacity: 0;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 900px) {
+  :root {
+    --section-gap: 80px;
+  }
+
+  .nav-links,
+  #nav-resume-btn {
+    display: none;
+  }
+
+  .mobile-toggle {
+    display: flex;
+  }
+
+  .project-card,
+  .project-card--reverse {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .project-card--reverse .project-image {
+    order: 0;
+  }
+
+  .project-card--reverse .project-info {
+    order: 0;
+    text-align: left;
+  }
+
+  .about-content {
+    grid-template-columns: 1fr;
+  }
+
+  .project-card--reverse .project-tags {
+    justify-content: flex-start;
+  }
+
+  .project-card--reverse .project-links {
+    justify-content: flex-start;
+  }
+
+  .skills-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .building-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  :root {
+    --section-gap: 64px;
+  }
+
+  .hero-name {
+    letter-spacing: -1px;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+  }
+
+  .hero-buttons .btn {
+    justify-content: center;
+  }
+
+  .section-heading {
+    margin-bottom: 36px;
+  }
+
+  .heading-line {
+    display: none;
+  }
+
+  .project-card {
+    margin-bottom: 64px;
+  }
+
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-links {
+    flex-direction: column;
+  }
+
+  .contact-links .btn {
+    justify-content: center;
+  }
+}
+
+/* ============================================
+   MOBILE PERFORMANCE OPTIMIZATION
+   ============================================ */
+@media (pointer: coarse) {
+  .reveal {
+    will-change: opacity;
+    filter: none !important;
+  }
+
+  .skill-category,
+  .building-card {
+    will-change: auto;
+    filter: none !important;
+  }
+
+  body::after {
+    display: none;
+  }
+
+  .cursor-glow,
+  .cursor-trail {
+    display: none;
+  }
+
+  .card-spotlight {
+    display: none;
+  }
+
+  .pipeline-arrow {
+    animation: none;
+    opacity: 0.5;
+  }
+}

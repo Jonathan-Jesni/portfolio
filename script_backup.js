@@ -200,14 +200,6 @@ function applyScrollTransforms(scrollY, viewportHeight, time) {
 
     let progress = getElementProgress(item, scrollY, viewportHeight);
 
-    // Reveal-once lock: if pushed past 80% visibility, lock it open permanently
-    if (progress > 0.8) {
-      item.revealed = true;
-    }
-    if (item.revealed) {
-      progress = 1;
-    }
-
     // Skip offscreen elements — no DOM writes needed
     if (progress <= 0 && item.so < 0.01) return;
 
@@ -221,6 +213,14 @@ function applyScrollTransforms(scrollY, viewportHeight, time) {
       const staggerDelay = item.staggerIndex * 0.07;
       progress = Math.max(0, Math.min(1, (progress - staggerDelay) / (1 - staggerDelay)));
       progress = easeOutCubic(progress);
+    }
+
+    // Reveal-once soft lock: after 80% visibility, never drop below 40%
+    if (progress > 0.8) {
+      item.revealed = true;
+    }
+    if (item.revealed) {
+      progress = Math.max(progress, 0.4);
     }
 
     const targetOpacity = progress;
@@ -283,8 +283,15 @@ function applyScrollTransforms(scrollY, viewportHeight, time) {
     // Store scroll transform — tilt system will combine when hovering
     item.el.__scrollTransform = scrollTransform;
 
-    // Single batched DOM write — opacity + transform + filter in one shot
-    item.el.style.cssText = `opacity:${item.so.toFixed(2)};transform:${scrollTransform};filter:${filterVal};will-change:transform;`;
+    if (item.isProjectCard && !isMobile) {
+      // Desktop Project cards: scroll system writes opacity + filter ONLY.
+      // Transform is strictly unified under the tilt system's rAF loop to prevent conflicts.
+      item.el.style.opacity = item.so.toFixed(2);
+      item.el.style.filter = filterVal;
+    } else {
+      // Mobile project cards & all other elements: single batched DOM write
+      item.el.style.cssText = `opacity:${item.so.toFixed(2)};transform:${scrollTransform};filter:${filterVal};will-change:transform;`;
+    }
   });
 }
 
@@ -681,13 +688,15 @@ if (!isMobile) {
         t.imgScale = 1;
       }
 
-      // Only append tilt rotation when meaningful (avoids unnecessary transform writes)
+      // Always apply unified transform: scroll base + tilt (even when tilt is zero)
       const hasTilt = Math.abs(t.rx) > 0.01 || Math.abs(t.ry) > 0.01;
-
+      const scrollT = t.el.__scrollTransform || '';
       if (hasTilt) {
-        const scrollT = t.el.__scrollTransform || '';
         t.el.style.transform =
           `${scrollT} rotateX(${t.rx.toFixed(2)}deg) rotateY(${t.ry.toFixed(2)}deg)`;
+      } else {
+        // No tilt — still apply scroll transform so project cards stay positioned
+        t.el.style.transform = scrollT;
       }
 
       // Apply micro-parallax to project image
