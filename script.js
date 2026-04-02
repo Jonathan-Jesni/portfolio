@@ -46,6 +46,7 @@ function registerElements() {
       sy: isLeft || isRight ? 0 : 52,
       ss: 0.96,
       so: 0,
+      revealed: false,
     });
   });
 
@@ -66,7 +67,7 @@ function registerElements() {
       delayOffset: seed * 0.03,
       cachedTop: 0,
       cachedHeight: 0,
-      sx: 0, sy: 30, ss: 0.96, so: 0,
+      sx: 0, sy: 30, ss: 0.96, so: 0, revealed: false,
     });
   });
 
@@ -87,8 +88,28 @@ function registerElements() {
       delayOffset: seed * 0.03,
       cachedTop: 0,
       cachedHeight: 0,
-      sx: 0, sy: 30, ss: 0.96, so: 0,
+      sx: 0, sy: 30, ss: 0.96, so: 0, revealed: false,
     });
+  });
+
+  // Fix: elements already in viewport on load should be immediately visible (no flicker)
+  const viewportThreshold = window.innerHeight * 0.9;
+  scrollElements.forEach(item => {
+    const rect = item.el.getBoundingClientRect();
+    if (rect.top < viewportThreshold) {
+      // Snap lerp state to fully visible
+      item.sx = 0;
+      item.sy = 0;
+      item.ss = 1 * item.scaleMul;
+      item.so = 1;
+      item.revealed = true;
+      // Apply immediately so there's no frame of invisibility
+      if (item.isHero) {
+        item.el.style.cssText = 'opacity:1;transform:translate(0,0) scale(1);filter:none;';
+      } else {
+        item.el.style.cssText = 'opacity:1;transform:translate(0px,0px) scale(1);filter:none;will-change:transform;';
+      }
+    }
   });
 
   updateCachedPositions();
@@ -178,6 +199,14 @@ function applyScrollTransforms(scrollY, viewportHeight, time) {
     }
 
     let progress = getElementProgress(item, scrollY, viewportHeight);
+
+    // Reveal-once lock: if pushed past 80% visibility, lock it open permanently
+    if (progress > 0.8) {
+      item.revealed = true;
+    }
+    if (item.revealed) {
+      progress = 1;
+    }
 
     // Skip offscreen elements — no DOM writes needed
     if (progress <= 0 && item.so < 0.01) return;

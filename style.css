@@ -1233,7 +1233,23 @@ section.section-depth-active {
    These classes define initial/fallback state only.
    ============================================ */
 .reveal {
+  opacity: 0;
+  transform: translateY(40px);
   will-change: opacity, transform;
+}
+
+/* Hero reveals should be visible immediately (JS snaps them on load) */
+#hero .reveal {
+  opacity: 0;
+  transform: none;
+}
+
+.reveal-left {
+  transform: translateX(-105px);
+}
+
+.reveal-right {
+  transform: translateX(105px);
 }
 
 @keyframes fadeInUp {
