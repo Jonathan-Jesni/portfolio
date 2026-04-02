@@ -158,8 +158,8 @@ function getIdleFloat(index, time) {
 const mobileFactor = isMobile ? 0.5 : 1;
 
 function applyScrollTransforms(scrollY, viewportHeight, time) {
-  // Reduced velocity boost (max 8% instead of 15%)
-  const velocityBoost = 1 + Math.min(Math.abs(smoothVelocity) * 0.002, 0.08);
+  // Reduced velocity boost (max 6% — gentler, more gliding motion)
+  const velocityBoost = 1 + Math.min(Math.abs(smoothVelocity) * 0.0015, 0.06);
   // Idle blend: ramp up floating when scroll stops
   const idleBlend = isScrolling ? 0 : Math.min(scrollIdleTimer * 0.3, 1);
 
@@ -218,7 +218,7 @@ function applyScrollTransforms(scrollY, viewportHeight, time) {
     }
 
     // Default + project cards
-    const blurMul = isMobile ? 0 : 0.5;
+    const blurMul = isMobile ? 0 : 0.35;
     const blurAmount = blurCurve * blurMul;
     const finalScale = scale * idleScale;
 
@@ -453,9 +453,11 @@ if (!isMobile) {
   const tiltStates = [];
   projectCards.forEach(card => {
     const imgContainer = card.querySelector('.project-image');
+    const spotlightEl = card.querySelector('.card-spotlight');
     tiltStates.push({
       el: card,
       imgEl: imgContainer,
+      spotlightEl: spotlightEl,
       rx: 0, ry: 0,   // Current rotation
       trx: 0, try: 0, // Target rotation
       imgTx: 0, imgTy: 0, imgScale: 1,       // Current image parallax
@@ -613,6 +615,15 @@ if (!isMobile) {
         t.imgEl.style.transform = `translate(${t.imgTx.toFixed(1)}px, ${t.imgTy.toFixed(1)}px) scale(${t.imgScale.toFixed(4)})`;
       } else if (t.imgEl) {
         t.imgEl.style.transform = '';
+      }
+
+      // 7. Magnetic spotlight — update CSS vars from cursor position
+      if (t.spotlightEl && t.inside) {
+        const rect = t.el.getBoundingClientRect();
+        const sx = ((mouseX - rect.left) / rect.width) * 100;
+        const sy = ((mouseY - rect.top) / rect.height) * 100;
+        t.spotlightEl.style.setProperty('--sx', sx.toFixed(1) + '%');
+        t.spotlightEl.style.setProperty('--sy', sy.toFixed(1) + '%');
       }
     }
 

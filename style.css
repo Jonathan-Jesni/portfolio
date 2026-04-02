@@ -592,6 +592,7 @@ section {
    PROJECT CARDS
    ============================================ */
 .project-card {
+  position: relative;
   display: grid;
   grid-template-columns: 1.2fr 1fr;
   gap: 32px;
@@ -599,13 +600,38 @@ section {
   margin-bottom: 100px;
   perspective: 1000px;
   transform-style: preserve-3d;
-  transition: box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease;
   border-radius: 12px;
+  border: 1px solid transparent;
+  overflow: hidden;
 }
 
 .project-card:hover {
   transform: translateY(-6px) scale(1.01);
-  box-shadow: 0 20px 60px rgba(100, 255, 218, 0.15), 0 8px 24px rgba(0, 0, 0, 0.3);
+  box-shadow:
+    0 20px 60px rgba(100, 255, 218, 0.15),
+    0 8px 24px rgba(0, 0, 0, 0.3),
+    inset 0 0 30px rgba(100, 255, 218, 0.03);
+  border-color: rgba(100, 255, 218, 0.15);
+}
+
+/* Magnetic Spotlight Overlay */
+.card-spotlight {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  border-radius: inherit;
+  background: radial-gradient(300px circle at var(--sx, 50%) var(--sy, 50%),
+      rgba(100, 255, 218, 0.08),
+      rgba(100, 255, 218, 0.03) 40%,
+      transparent 70%);
+}
+
+.project-card:hover .card-spotlight {
+  opacity: 1;
 }
 
 .project-card:last-child {
@@ -1026,9 +1052,17 @@ section {
   display: inline-block;
 }
 
-.about-snippet-dot:nth-child(1) { background: #ff5f57; }
-.about-snippet-dot:nth-child(2) { background: #febc2e; }
-.about-snippet-dot:nth-child(3) { background: #28c840; }
+.about-snippet-dot:nth-child(1) {
+  background: #ff5f57;
+}
+
+.about-snippet-dot:nth-child(2) {
+  background: #febc2e;
+}
+
+.about-snippet-dot:nth-child(3) {
+  background: #28c840;
+}
 
 .about-snippet-title {
   font-family: var(--font-mono);
@@ -1323,6 +1357,10 @@ section {
 
   .cursor-glow,
   .cursor-trail {
+    display: none;
+  }
+
+  .card-spotlight {
     display: none;
   }
 
