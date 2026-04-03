@@ -32,20 +32,20 @@ export function registerElements() {
     scrollElements.push({
       el,
       type: 'up',
-      offsetX: 0,
-      offsetY: 28,
+      offsetX: 6,
+      offsetY: 22,
       isHero,
       isSkill: false,
       // Organic variation per element
-      parallaxMul: 0.95 + seed * 0.1,     // 0.95–1.05
-      scaleMul: 0.97 + seed * 0.06,       // 0.97–1.03
-      delayOffset: seed * 0.02,            // 0–0.02
+      parallaxMul: 0.98 + seed * 0.04,
+      scaleMul: 1,
+      delayOffset: seed * 0.02,
       cachedTop: 0,
       cachedHeight: 0,
       // Lerp state for smooth interpolation
-      sx: 0,
-      sy: 28,
-      ss: 0.96,
+      sx: 6,
+      sy: 22,
+      ss: 0.985,
       so: 0,
       revealed: false,
     });
@@ -57,17 +57,17 @@ export function registerElements() {
     scrollElements.push({
       el,
       type: 'skill',
-      offsetX: -8,
-      offsetY: 6,
+      offsetX: 6,
+      offsetY: 4,
       staggerIndex: i,
       isHero: false,
       isSkill: true,
-      parallaxMul: 0.95 + seed * 0.1,
-      scaleMul: 0.97 + seed * 0.06,
+      parallaxMul: 0.98 + seed * 0.04,
+      scaleMul: 1,
       delayOffset: seed * 0.02,
       cachedTop: 0,
       cachedHeight: 0,
-      sx: -8, sy: 6, ss: 0.96, so: 0, revealed: false,
+      sx: 6, sy: 4, ss: 0.985, so: 0, revealed: false,
     });
   });
 
@@ -76,17 +76,17 @@ export function registerElements() {
     scrollElements.push({
       el,
       type: 'skill-desc',
-      offsetX: -6,
+      offsetX: 6,
       offsetY: 0,
       staggerIndex: i,
       isHero: false,
       isSkill: true,
       parallaxMul: 1,
       scaleMul: 1,
-      delayOffset: (i % 6) * 0.05,
+      delayOffset: (i % 6) * 0.045,
       cachedTop: 0,
       cachedHeight: 0,
-      sx: -6, sy: 0, ss: 1, so: 0, revealed: false,
+      sx: 6, sy: 0, ss: 1, so: 0, revealed: false,
     });
   });
 
@@ -97,16 +97,16 @@ export function registerElements() {
       el,
       type: 'stagger',
       offsetX: 0,
-      offsetY: 26,
+      offsetY: 24,
       staggerIndex: i,
       isHero: false,
       isSkill: false,
-      parallaxMul: 0.95 + seed * 0.1,
-      scaleMul: 0.97 + seed * 0.06,
+      parallaxMul: 0.98 + seed * 0.04,
+      scaleMul: 1,
       delayOffset: seed * 0.02,
       cachedTop: 0,
       cachedHeight: 0,
-      sx: 0, sy: 26, ss: 0.96, so: 0, revealed: false,
+      sx: 0, sy: 24, ss: 0.985, so: 0, revealed: false,
     });
   });
 
@@ -184,7 +184,7 @@ function getIdleFloat(index, time) {
 const mobileFactor = isMobile ? 0.5 : 1;
 
 export function applyScrollTransforms(scrollY, viewportHeight, time) {
-  const lerpFactor = 0.085;
+  const lerpFactor = 0.09;
   // Idle blend: ramp up floating when scroll stops
   const idleBlend = isScrolling ? 0 : Math.min(scrollIdleTimer * 0.3, 1);
 
@@ -218,7 +218,7 @@ export function applyScrollTransforms(scrollY, viewportHeight, time) {
     // Elements animate in on scroll down, animate out on scroll up
 
     const targetOpacity = Math.pow(progress, 1.2);
-    const baseScale = 0.96 + 0.04 * progress;
+    const baseScale = 0.985 + 0.015 * progress;
     const targetScale = baseScale * item.scaleMul;
 
     // Softer slide easing: (1-progress)^1.6 — smoother deceleration, less abrupt

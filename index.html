@@ -301,23 +301,51 @@
   <!-- ===== SKILLS ===== -->
   <section id="skills">
     <div class="container">
-      <h2 class="section-heading reveal">
-        <span class="section-number mono">02.</span>
-        <span class="mono section-label">&gt; skills.list</span>
-        <span class="heading-line"></span>
-      </h2>
-      <div class="skills-grid reveal">
+        <h2 class="section-heading reveal" style="justify-content: flex-start; flex-wrap: wrap;">
+          <span class="section-number mono">02.</span>
+          <span class="mono section-label" style="margin-right: auto;">&gt; skills.list</span>
+          
+          <!-- View Toggle UI -->
+          <div class="skills-view-toggle mono">
+            <span class="toggle-btn active" data-view="system">[ system ]</span>
+            <span class="toggle-btn" data-view="visual">[ visual ]</span>
+          </div>
+          <span class="heading-line" style="flex-basis: 100%; margin-top: -30px; display: none;"></span> 
+        </h2>
+        
+        <div class="skills-container">
+          <!-- SYSTEM VIEW (Original Structure) -->
+          <div class="skills-view system-view active" id="view-system">
+            <div class="skills-grid reveal">
         <div class="skill-category" id="skill-languages">
           <h3 class="skill-category-title">
             <span class="skill-status mono">[ CORE ]</span> Languages
           </h3>
           <ul class="skill-list">
-            <li>Python <span class="skill-tag">(core)</span></li>
-            <li>Java <span class="skill-tag">(oop)</span></li>
-            <li>C / C++ <span class="skill-tag">(systems)</span></li>
-            <li>Dart <span class="skill-tag">(ui)</span></li>
-            <li>Flask <span class="skill-tag">(api)</span></li>
-            <li>Flutter <span class="skill-tag">(mobile)</span></li>
+            <li>
+              <span class="skill-name">Python <span class="skill-tag">(core)</span></span>
+              <span class="skill-desc">→ used for backend systems, automation, and machine learning pipelines</span>
+            </li>
+            <li>
+              <span class="skill-name">Java <span class="skill-tag">(oop)</span></span>
+              <span class="skill-desc">→ object-oriented programming for scalable application logic and systems</span>
+            </li>
+            <li>
+              <span class="skill-name">C / C++ <span class="skill-tag">(systems)</span></span>
+              <span class="skill-desc">→ low-level programming for performance-critical and system-level tasks</span>
+            </li>
+            <li>
+              <span class="skill-name">Dart <span class="skill-tag">(ui)</span></span>
+              <span class="skill-desc">→ used for building cross-platform UI with Flutter</span>
+            </li>
+            <li>
+              <span class="skill-name">Flask <span class="skill-tag">(api)</span></span>
+              <span class="skill-desc">→ lightweight backend framework for building REST APIs</span>
+            </li>
+            <li>
+              <span class="skill-name">Flutter <span class="skill-tag">(mobile)</span></span>
+              <span class="skill-desc">→ cross-platform mobile app development with a single codebase</span>
+            </li>
           </ul>
         </div>
         <div class="skill-category" id="skill-tools">
@@ -325,11 +353,26 @@
             <span class="skill-status mono">[ LOADED ]</span> Libraries & Tools
           </h3>
           <ul class="skill-list">
-            <li>PyTorch <span class="skill-tag">(training)</span></li>
-            <li>TensorFlow <span class="skill-tag">(models)</span></li>
-            <li>OpenCV <span class="skill-tag">(vision)</span></li>
-            <li>NumPy <span class="skill-tag">(compute)</span></li>
-            <li>Pandas <span class="skill-tag">(data)</span></li>
+            <li>
+              <span class="skill-name">PyTorch <span class="skill-tag">(training)</span></span>
+              <span class="skill-desc">→ deep learning framework for model training and experimentation</span>
+            </li>
+            <li>
+              <span class="skill-name">TensorFlow <span class="skill-tag">(models)</span></span>
+              <span class="skill-desc">→ production-ready ML framework for building and deploying models</span>
+            </li>
+            <li>
+              <span class="skill-name">OpenCV <span class="skill-tag">(vision)</span></span>
+              <span class="skill-desc">→ computer vision library for image processing and detection tasks</span>
+            </li>
+            <li>
+              <span class="skill-name">NumPy <span class="skill-tag">(compute)</span></span>
+              <span class="skill-desc">→ numerical computing and array operations for ML/data workloads</span>
+            </li>
+            <li>
+              <span class="skill-name">Pandas <span class="skill-tag">(data)</span></span>
+              <span class="skill-desc">→ data manipulation and preprocessing for structured datasets</span>
+            </li>
           </ul>
         </div>
         <div class="skill-category" id="skill-ai">
@@ -337,11 +380,26 @@
             <span class="skill-status mono">[ ACTIVE ]</span> AI / Machine Learning
           </h3>
           <ul class="skill-list">
-            <li>Machine Learning <span class="skill-tag">(pipelines)</span></li>
-            <li>Deep Learning <span class="skill-tag">(cnn)</span></li>
-            <li>Computer Vision <span class="skill-tag">(analysis)</span></li>
-            <li>Recommender Systems <span class="skill-tag">(matching)</span></li>
-            <li>YOLO <span class="skill-tag">(real-time)</span></li>
+            <li>
+              <span class="skill-name">Machine Learning <span class="skill-tag">(pipelines)</span></span>
+              <span class="skill-desc">→ end-to-end ML pipelines including preprocessing, training, and evaluation</span>
+            </li>
+            <li>
+              <span class="skill-name">Deep Learning <span class="skill-tag">(cnn)</span></span>
+              <span class="skill-desc">→ neural network architectures for high-dimensional data like images</span>
+            </li>
+            <li>
+              <span class="skill-name">Computer Vision <span class="skill-tag">(analysis)</span></span>
+              <span class="skill-desc">→ extracting insights from images and video using ML techniques</span>
+            </li>
+            <li>
+              <span class="skill-name">Recommender Systems <span class="skill-tag">(matching)</span></span>
+              <span class="skill-desc">→ building systems that suggest relevant content based on patterns</span>
+            </li>
+            <li>
+              <span class="skill-name">YOLO <span class="skill-tag">(real-time)</span></span>
+              <span class="skill-desc">→ real-time object detection optimized for speed and accuracy</span>
+            </li>
           </ul>
         </div>
         <div class="skill-category" id="skill-security">
@@ -349,9 +407,18 @@
             <span class="skill-status mono">[ SECURE ]</span> Cybersecurity
           </h3>
           <ul class="skill-list">
-            <li>Threat Detection <span class="skill-tag">(real-time)</span></li>
-            <li>Phishing Analysis <span class="skill-tag">(nlp/cv)</span></li>
-            <li>Network Security <span class="skill-tag">(monitoring)</span></li>
+            <li>
+              <span class="skill-name">Threat Detection <span class="skill-tag">(real-time)</span></span>
+              <span class="skill-desc">→ identifying malicious patterns and anomalies in real-time systems</span>
+            </li>
+            <li>
+              <span class="skill-name">Phishing Analysis <span class="skill-tag">(nlp/cv)</span></span>
+              <span class="skill-desc">→ detecting phishing attacks using NLP and visual analysis</span>
+            </li>
+            <li>
+              <span class="skill-name">Network Security <span class="skill-tag">(monitoring)</span></span>
+              <span class="skill-desc">→ monitoring and securing network traffic and system behavior</span>
+            </li>
           </ul>
         </div>
         <div class="skill-category" id="skill-networking">
@@ -359,8 +426,14 @@
             <span class="skill-status mono">[ RENDER ]</span> Graphics / Simulation
           </h3>
           <ul class="skill-list">
-            <li>Blender <span class="skill-tag">(bpy)</span></li>
-            <li>Synthetic Data <span class="skill-tag">(generation)</span></li>
+            <li>
+              <span class="skill-name">Blender <span class="skill-tag">(bpy)</span></span>
+              <span class="skill-desc">→ scripting and automation for 3D graphics and simulations</span>
+            </li>
+            <li>
+              <span class="skill-name">Synthetic Data <span class="skill-tag">(generation)</span></span>
+              <span class="skill-desc">→ generating artificial datasets for training ML models</span>
+            </li>
           </ul>
         </div>
         <div class="skill-category" id="skill-systems">
@@ -368,15 +441,133 @@
             <span class="skill-status mono">[ ONLINE ]</span> Systems Engineering
           </h3>
           <ul class="skill-list">
-            <li>System Architecture <span class="skill-tag">(design)</span></li>
-            <li>Pipeline Design <span class="skill-tag">(etl)</span></li>
-            <li>Performance <span class="skill-tag">(optimization)</span></li>
-            <li>GPU Computing <span class="skill-tag">(cuda)</span></li>
+            <li>
+              <span class="skill-name">System Architecture <span class="skill-tag">(design)</span></span>
+              <span class="skill-desc">→ designing scalable and modular system structures</span>
+            </li>
+            <li>
+              <span class="skill-name">Pipeline Design <span class="skill-tag">(etl)</span></span>
+              <span class="skill-desc">→ building data pipelines for processing and transformation workflows</span>
+            </li>
+            <li>
+              <span class="skill-name">Performance Optimization <span class="skill-tag">(optimization)</span></span>
+              <span class="skill-desc">→ improving efficiency and speed of systems and algorithms</span>
+            </li>
+            <li>
+              <span class="skill-name">GPU Computing <span class="skill-tag">(cuda)</span></span>
+              <span class="skill-desc">→ orchestrating cloud infrastructure and scalable container architectures</span>
+            </li>
           </ul>
         </div>
       </div>
+    </div> <!-- End System View -->
+
+    <!-- VISUAL VIEW (Network Nodes) -->
+    <div class="skills-view visual-view" id="view-visual">
+      <div class="skills-network-wrapper">
+        <div class="skills-network">
+          <!-- Background SVG Connections -->
+          <svg class="network-lines" width="100%" height="100%">
+            <!-- Group 1: Core Hub to Satellites -->
+            <line class="line-core" x1="20%" y1="25%" x2="12%" y2="15%"></line>
+            <line class="line-core" x1="20%" y1="25%" x2="28%" y2="15%"></line>
+            <line class="line-core" x1="20%" y1="25%" x2="12%" y2="35%"></line>
+            <line class="line-core" x1="20%" y1="25%" x2="25%" y2="40%"></line>
+            <line class="line-core" x1="20%" y1="25%" x2="16%" y2="48%"></line>
+
+            <!-- Group 2: Tools Hub to Satellites -->
+            <line class="line-tools" x1="80%" y1="25%" x2="88%" y2="15%"></line>
+            <line class="line-tools" x1="80%" y1="25%" x2="72%" y2="15%"></line>
+            <line class="line-tools" x1="80%" y1="25%" x2="88%" y2="35%"></line>
+            <line class="line-tools" x1="80%" y1="25%" x2="75%" y2="40%"></line>
+
+            <!-- Group 3: AI Hub to Satellites -->
+            <line class="line-ai" x1="50%" y1="50%" x2="40%" y2="40%"></line>
+            <line class="line-ai" x1="50%" y1="50%" x2="60%" y2="40%"></line>
+            <line class="line-ai" x1="50%" y1="50%" x2="38%" y2="60%"></line>
+            <line class="line-ai" x1="50%" y1="50%" x2="62%" y2="60%"></line>
+
+            <!-- Group 4: Cyber Hub to Satellites -->
+            <line class="line-cyber" x1="20%" y1="75%" x2="12%" y2="85%"></line>
+            <line class="line-cyber" x1="20%" y1="75%" x2="28%" y2="85%"></line>
+            <line class="line-cyber" x1="20%" y1="75%" x2="12%" y2="65%"></line>
+            <line class="line-cyber" x1="20%" y1="75%" x2="25%" y2="60%"></line>
+
+            <!-- Group 5: Systems Hub to Satellites -->
+            <line class="line-sys" x1="80%" y1="75%" x2="88%" y2="85%"></line>
+            <line class="line-sys" x1="80%" y1="75%" x2="72%" y2="85%"></line>
+            <line class="line-sys" x1="80%" y1="75%" x2="88%" y2="65%"></line>
+            <line class="line-sys" x1="80%" y1="75%" x2="75%" y2="60%"></line>
+
+            <!-- Group 6: Graphics Hub to Satellites -->
+            <line class="line-gfx" x1="50%" y1="85%" x2="40%" y2="78%"></line>
+            <line class="line-gfx" x1="50%" y1="85%" x2="60%" y2="78%"></line>
+            <line class="line-gfx" x1="50%" y1="85%" x2="42%" y2="95%"></line>
+            <line class="line-gfx" x1="50%" y1="85%" x2="58%" y2="95%"></line>
+
+            <!-- Inter-Hub Main Lines -->
+            <line class="line-main line-core" x1="20%" y1="25%" x2="50%" y2="50%"></line>
+            <line class="line-main line-tools" x1="80%" y1="25%" x2="50%" y2="50%"></line>
+            <line class="line-main line-cyber" x1="20%" y1="75%" x2="50%" y2="50%"></line>
+            <line class="line-main line-sys" x1="80%" y1="75%" x2="50%" y2="50%"></line>
+            <line class="line-main line-gfx" x1="50%" y1="85%" x2="50%" y2="50%"></line>
+          </svg>
+
+          <!-- AI/ML Cluster (Center) -->
+          <div class="skill-node hub" style="top: 50%; left: 50%;" data-group="ai" data-desc="end-to-end ML pipelines including preprocessing, training, and evaluation">Machine Learning</div>
+          <div class="skill-node" style="top: 40%; left: 40%;" data-group="ai" data-desc="neural network architectures for high-dimensional data">Deep Learning</div>
+          <div class="skill-node" style="top: 40%; left: 60%;" data-group="ai" data-desc="extracting insights from images and video using ML">Computer Vision</div>
+          <div class="skill-node" style="top: 60%; left: 38%;" data-group="ai" data-desc="real-time object detection optimized for speed">YOLO</div>
+          <div class="skill-node" style="top: 60%; left: 62%;" data-group="ai" data-desc="building systems that suggest relevant content">Recommenders</div>
+
+          <!-- CORE/Lang Cluster (Top Left) -->
+          <div class="skill-node hub" style="top: 25%; left: 20%;" data-group="core" data-desc="used for backend systems, automation, and ML">Python</div>
+          <div class="skill-node" style="top: 15%; left: 12%;" data-group="core" data-desc="object-oriented programming for scalable logic">Java</div>
+          <div class="skill-node" style="top: 15%; left: 28%;" data-group="core" data-desc="low-level programming for performance tasks">C/C++</div>
+          <div class="skill-node" style="top: 35%; left: 12%;" data-group="core" data-desc="lightweight framework for building APIs">Flask</div>
+          <div class="skill-node" style="top: 40%; left: 25%;" data-group="core" data-desc="used for UI and frontend architecture">Dart</div>
+          <div class="skill-node" style="top: 48%; left: 16%;" data-group="core" data-desc="cross-platform app framework">Flutter</div>
+
+          <!-- LOADED/Tools Cluster (Top Right) -->
+          <div class="skill-node hub" style="top: 25%; left: 80%;" data-group="tools" data-desc="production-ready ML framework">TensorFlow</div>
+          <div class="skill-node" style="top: 15%; left: 88%;" data-group="tools" data-desc="deep learning for research and training">PyTorch</div>
+          <div class="skill-node" style="top: 15%; left: 72%;" data-group="tools" data-desc="computer vision and array manipulation">OpenCV</div>
+          <div class="skill-node" style="top: 35%; left: 88%;" data-group="tools" data-desc="numerical computing and math">NumPy</div>
+          <div class="skill-node" style="top: 40%; left: 75%;" data-group="tools" data-desc="dataset manipulation and preprocessing">Pandas</div>
+
+          <!-- SECURE Cluster (Bottom Left) -->
+          <div class="skill-node hub" style="top: 75%; left: 20%;" data-group="cyber" data-desc="finding vulnerabilities in security architectures">PenTesting</div>
+          <div class="skill-node" style="top: 85%; left: 12%;" data-group="cyber" data-desc="secure data encryption algorithms">Cryptography</div>
+          <div class="skill-node" style="top: 85%; left: 28%;" data-group="cyber" data-desc="defending and securing local and web protocols">NetSec</div>
+          <div class="skill-node" style="top: 65%; left: 12%;" data-group="cyber" data-desc="digital investigation pipelines">Forensics</div>
+          <div class="skill-node" style="top: 60%; left: 25%;" data-group="cyber" data-desc="analyzing and reverse engineering exploits">Malware</div>
+
+          <!-- ONLINE/Systems Cluster (Bottom Right) -->
+          <div class="skill-node hub" style="top: 75%; left: 80%;" data-group="sys" data-desc="containerizing applications and workflows">Docker</div>
+          <div class="skill-node" style="top: 85%; left: 88%;" data-group="sys" data-desc="managing distributed micro-level clusters">Kubernetes</div>
+          <div class="skill-node" style="top: 85%; left: 72%;" data-group="sys" data-desc="automated building and deployment pipelines">CI/CD</div>
+          <div class="skill-node" style="top: 65%; left: 88%;" data-group="sys" data-desc="optimizing compute workloads across networks">Distributed</div>
+          <div class="skill-node" style="top: 60%; left: 75%;" data-group="sys" data-desc="cloud deployment and VPC topologies">AWS</div>
+
+          <!-- RENDER Cluster (Bottom Center) -->
+          <div class="skill-node hub" style="top: 85%; left: 50%;" data-group="gfx" data-desc="custom memory shaders and physical pipelines">Shader</div>
+          <div class="skill-node" style="top: 78%; left: 40%;" data-group="gfx" data-desc="GPU accelerated graphics loop">OpenGL</div>
+          <div class="skill-node" style="top: 78%; left: 60%;" data-group="gfx" data-desc="rendering engine mechanics on web architecture">WebGL</div>
+          <div class="skill-node" style="top: 95%; left: 42%;" data-group="gfx" data-desc="low-overhead cross-platform 3D API">Vulkan</div>
+          <div class="skill-node" style="top: 95%; left: 58%;" data-group="gfx" data-desc="photorealistic physical lighting simulations">RayTracing</div>
+        </div>
+      </div>
+    </div> <!-- End Visual View -->
+    
+    <!-- Shared Tooltip container for hover states -->
+    <div id="visual-tooltip" class="visual-tooltip">
+      <div class="tooltip-title"></div>
+      <div class="tooltip-desc"></div>
     </div>
-  </section>
+    
+    </div> <!-- End skills-container -->
+  </div> <!-- End container -->
+</section>
 
   <!-- ===== ABOUT ===== -->
   <section id="about">

@@ -368,3 +368,92 @@ document.querySelectorAll('section').forEach(section => {
     requestAnimationFrame(typeFrame);
   }
 })();
+
+// ============================================
+// SKILLS MODULE EXPANSION (Mobile/Click handling)
+// ============================================
+document.querySelectorAll('.skill-category').forEach(category => {
+  const items = category.querySelectorAll('.skill-list li');
+  items.forEach(item => {
+    item.addEventListener('click', (e) => {
+      if (window.matchMedia('(hover: hover)').matches) return; // Let CSS handle desktop hover
+      
+      const isExpanded = item.classList.contains('expanded');
+      items.forEach(sibling => sibling.classList.remove('expanded'));
+      if (!isExpanded) {
+        item.classList.add('expanded');
+      }
+    });
+  });
+});
+
+// ============================================
+// DUAL-MODE SKILLS VIEW & NETWORK INTERACTION
+// ============================================
+const toggleBtns = document.querySelectorAll('.skills-view-toggle .toggle-btn');
+const systemView = document.getElementById('view-system');
+const visualView = document.getElementById('view-visual');
+
+toggleBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (btn.classList.contains('active')) return;
+    
+    toggleBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    if (btn.dataset.view === 'visual') {
+      systemView.classList.remove('active');
+      visualView.classList.add('active');
+    } else {
+      visualView.classList.remove('active');
+      systemView.classList.add('active');
+    }
+  });
+});
+
+const tooltip = document.getElementById('visual-tooltip');
+const tooltipTitle = tooltip?.querySelector('.tooltip-title');
+const tooltipDesc = tooltip?.querySelector('.tooltip-desc');
+const skillNodes = document.querySelectorAll('.skill-node');
+
+skillNodes.forEach(node => {
+  node.addEventListener('mouseenter', (e) => {
+    const group = node.dataset.group;
+    if (group) {
+      document.querySelectorAll(`.line-${group}`).forEach(line => line.classList.add('active-path'));
+      if (group === 'ai') {
+        document.querySelectorAll(`.line-main`).forEach(line => line.classList.add('active-path'));
+      }
+      document.querySelectorAll(`.skill-node[data-group="${group}"]`).forEach(n => n.classList.add('highlighted'));
+    }
+    
+    if (tooltip && tooltipTitle && tooltipDesc) {
+      tooltipTitle.textContent = node.textContent;
+      tooltipDesc.textContent = node.dataset.desc || '';
+      tooltip.classList.add('show');
+    }
+  });
+  
+  node.addEventListener('mousemove', (e) => {
+    if (tooltip && tooltip.classList.contains('show')) {
+      // Offset tooltip from cursor
+      tooltip.style.left = e.clientX + 'px';
+      tooltip.style.top = e.clientY + 'px';
+    }
+  });
+  
+  node.addEventListener('mouseleave', () => {
+    const group = node.dataset.group;
+    if (group) {
+      document.querySelectorAll(`.line-${group}`).forEach(line => line.classList.remove('active-path'));
+      if (group === 'ai') {
+        document.querySelectorAll(`.line-main`).forEach(line => line.classList.remove('active-path'));
+      }
+      document.querySelectorAll(`.skill-node[data-group="${group}"]`).forEach(n => n.classList.remove('highlighted'));
+    }
+    
+    if (tooltip) {
+      tooltip.classList.remove('show');
+    }
+  });
+});
