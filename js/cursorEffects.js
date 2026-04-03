@@ -14,7 +14,7 @@ let glowX = 0, glowY = 0;
 let cursorGlow;
 
 // --- Trail particles ---
-const TRAIL_COUNT = 12;
+const TRAIL_COUNT = 10;
 const trails = [];
 let trailIndex = 0;
 let lastTrailX = 0, lastTrailY = 0;
@@ -80,7 +80,7 @@ function spawnTrail() {
     trail.el.style.top = mouseY + 'px';
     trail.el.style.width = sizeVar + 'px';
     trail.el.style.height = sizeVar + 'px';
-    trail.el.style.opacity = opacityVar.toFixed(3);
+    trail.el.style.opacity = Math.round(opacityVar * 10) / 10;
     trailIndex++;
 
     lastTrailX = mouseX;
@@ -114,7 +114,7 @@ export function updateCursorEffects() {
         trail.life = 0;
         trail.el.style.opacity = '0';
       } else {
-        trail.el.style.opacity = (trail.life * 0.35).toFixed(3);
+        trail.el.style.opacity = Math.round(trail.life * 0.35 * 10) / 10;
       }
     }
   }
@@ -134,8 +134,8 @@ export function updateCursorEffects() {
     lastSpotlightVal = newSpotlightVal;
   }
   if (spotlightActive && !isFastScroll) {
-    document.body.style.setProperty('--mx', smoothMouseX.toFixed(0) + 'px');
-    document.body.style.setProperty('--my', smoothMouseY.toFixed(0) + 'px');
+    document.body.style.setProperty('--mx', Math.round(smoothMouseX) + 'px');
+    document.body.style.setProperty('--my', Math.round(smoothMouseY) + 'px');
   }
 
   // 4. Magnetic buttons (elastic JS interpolation + scale)
@@ -172,7 +172,7 @@ export function updateCursorEffects() {
     }
 
     if (b.cx !== 0 || b.cy !== 0 || b.cs !== 1) {
-      b.el.style.transform = `translate(${b.cx.toFixed(1)}px, ${b.cy.toFixed(1)}px) scale(${b.cs.toFixed(4)})`;
+      b.el.style.transform = `translate3d(${Math.round(b.cx * 10) / 10}px, ${Math.round(b.cy * 10) / 10}px, 0) scale(${Math.round(b.cs * 1000) / 1000})`;
     } else {
       b.el.style.transform = '';
     }

@@ -38,7 +38,6 @@ export function registerElements() {
       offsetY: isLeft || isRight ? 0 : 52,
       isHero,
       isSkill: false,
-      isProjectCard: el.classList.contains('project-card'),
       // Organic variation per element
       parallaxMul: 0.9 + seed * 0.2,     // 0.9–1.1
       scaleMul: 0.97 + seed * 0.06,       // 0.97–1.03
@@ -65,7 +64,6 @@ export function registerElements() {
       staggerIndex: i,
       isHero: false,
       isSkill: true,
-      isProjectCard: false,
       parallaxMul: 0.85 + seed * 0.3,
       scaleMul: 0.97 + seed * 0.06,
       delayOffset: seed * 0.03,
@@ -108,11 +106,9 @@ export function registerElements() {
       item.so = 1;
       item.revealed = true;
       // Apply immediately so there's no frame of invisibility
-      if (item.isHero) {
-        item.el.style.cssText = 'opacity:1;transform:translate(0,0) scale(1);filter:none;';
-      } else {
-        item.el.style.cssText = 'opacity:1;transform:translate(0px,0px) scale(1);filter:none;will-change:transform;';
-      }
+      item.el.style.opacity = '1';
+      item.el.style.transform = 'translate3d(0,0,0) scale(1)';
+      item.el.style.filter = 'none';
     }
   });
 
@@ -165,15 +161,17 @@ function getIdleFloat(index, time) {
 const mobileFactor = isMobile ? 0.5 : 1;
 
 export function applyScrollTransforms(scrollY, viewportHeight, time) {
-  const lerpFactor = 0.08;
-  const projectLerpFactor = 0.07;
+  const lerpFactor = 0.075;
+  const projectLerpFactor = 0.065;
   // Idle blend: ramp up floating when scroll stops
   const idleBlend = isScrolling ? 0 : Math.min(scrollIdleTimer * 0.3, 1);
 
   scrollElements.forEach((item, idx) => {
     if (item.isHero) {
       const heroFloat = Math.sin(time * 0.4) * 1.2;
-      item.el.style.cssText = `opacity:1;transform:translate(0,${heroFloat.toFixed(2)}px) scale(1);filter:none;`;
+      item.el.style.opacity = '1';
+      item.el.style.transform = `translate3d(0,${heroFloat.toFixed(2)}px,0) scale(1)`;
+      item.el.style.filter = 'none';
       return;
     }
 
@@ -197,14 +195,14 @@ export function applyScrollTransforms(scrollY, viewportHeight, time) {
     // No reveal lock — progress tracks scroll position bidirectionally
     // Elements animate in on scroll down, animate out on scroll up
 
-    const targetOpacity = progress;
+    const targetOpacity = Math.pow(progress, 1.2);
     const baseScale = 0.96 + 0.04 * progress;
     const targetScale = baseScale * item.scaleMul;
 
-    // Softer slide easing: (1-progress)^1.4 — smoother deceleration, less abrupt
+    // Softer slide easing: (1-progress)^1.6 — smoother deceleration, less abrupt
     const slideEase = item.isProjectCard
       ? Math.pow(1 - progress, 1.6)
-      : Math.pow(1 - progress, 1.4);
+      : Math.pow(1 - progress, 1.6);
     // No velocityBoost on translation — eliminates scroll-spike jitter
     const targetX = item.offsetX * slideEase * mobileFactor * item.parallaxMul;
     const targetY = item.offsetY * (1 - progress) * mobileFactor * item.parallaxMul;
@@ -241,7 +239,9 @@ export function applyScrollTransforms(scrollY, viewportHeight, time) {
       const blurMul = isMobile ? 0 : 2.0;
       const blurAmount = blurCurve * blurMul;
 
-      item.el.style.cssText = `opacity:${item.so.toFixed(2)};transform:translate(${item.sx.toFixed(1)}px,${(parallaxY + idleY).toFixed(2)}px) scale(${finalScale.toFixed(2)});filter:${blurAmount > 0.05 ? `blur(${blurAmount.toFixed(2)}px)` : 'none'};will-change:opacity,transform,filter;`;
+      item.el.style.opacity = item.so.toFixed(2);
+      item.el.style.transform = `translate3d(${item.sx.toFixed(1)}px,${(parallaxY + idleY).toFixed(2)}px,0) scale(${finalScale.toFixed(2)})`;
+      item.el.style.filter = blurAmount > 0.05 ? `blur(${blurAmount.toFixed(2)}px)` : 'none';
       return;
     }
 
@@ -252,7 +252,7 @@ export function applyScrollTransforms(scrollY, viewportHeight, time) {
     const filterVal = blurAmount > 0.05 ? `blur(${blurAmount.toFixed(2)}px)` : 'none';
 
     const scrollTransform =
-      `translate(${item.sx.toFixed(1)}px,${(item.sy + idleY).toFixed(2)}px) scale(${finalScale.toFixed(2)})`;
+      `translate3d(${item.sx.toFixed(1)}px,${(item.sy + idleY).toFixed(2)}px,0) scale(${finalScale.toFixed(2)})`;
 
     // Store scroll transform — tilt system will combine when hovering
     item.el.__scrollTransform = scrollTransform;
@@ -263,8 +263,10 @@ export function applyScrollTransforms(scrollY, viewportHeight, time) {
       item.el.style.opacity = item.so.toFixed(2);
       item.el.style.filter = filterVal;
     } else {
-      // Mobile project cards & all other elements: single batched DOM write
-      item.el.style.cssText = `opacity:${item.so.toFixed(2)};transform:${scrollTransform};filter:${filterVal};will-change:transform;`;
+      // Mobile project cards & all other elements
+      item.el.style.opacity = item.so.toFixed(2);
+      item.el.style.transform = scrollTransform;
+      item.el.style.filter = filterVal;
     }
   });
 }
@@ -289,7 +291,7 @@ export function updateScrollState(scrollY) {
   lastScrollY = scrollY;
 
   // Detect idle state
-  if (Math.abs(scrollVelocity) > 0.5) {
+  if (Math.abs(scrollVelocity) > 1) {
     isScrolling = true;
     scrollIdleTimer = 0;
   } else {

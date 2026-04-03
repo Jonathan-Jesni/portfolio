@@ -1,170 +1,94 @@
 /* ============================================
-   PROJECT CARDS
+   PROJECTS — STICKY SPLIT-SCROLL LAYOUT
    ============================================ */
-.project-card {
-  position: relative;
+
+/* Split-scroll container */
+.projects-wrapper {
   display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 32px;
-  align-items: center;
-  margin-bottom: 100px;
-  perspective: 1000px;
-  transform-style: preserve-3d;
-  /* NO transform transition — JS drives transform via rAF to prevent stutter */
-  transition: box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease;
-  border-radius: 12px;
-  border: 1px solid transparent;
-  overflow: hidden;
-  will-change: transform;
-  transform: translateZ(0);
-}
-
-.project-card:hover {
-  /* transform is handled entirely by JS (scroll + tilt) — no CSS transform here */
-  box-shadow:
-    0 10px 24px rgba(100, 255, 218, 0.1),
-    0 4px 12px rgba(0, 0, 0, 0.2);
-  border-color: rgba(100, 255, 218, 0.15);
-}
-
-/* Magnetic Spotlight Overlay */
-.card-spotlight {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  border-radius: inherit;
-  background: radial-gradient(220px circle at var(--sx, 50%) var(--sy, 50%),
-      rgba(100, 255, 218, 0.08),
-      rgba(100, 255, 218, 0.03) 40%,
-      transparent 70%);
-}
-
-.project-card:hover .card-spotlight {
-  opacity: 1;
-}
-
-.project-card:last-child {
-  margin-bottom: 0;
-}
-
-.project-card--reverse {
-  grid-template-columns: 1fr 1.2fr;
-}
-
-.project-card--reverse .project-image {
-  order: 2;
-}
-
-.project-card--reverse .project-info {
-  order: 1;
-  text-align: right;
-}
-
-.project-card--reverse .project-tags {
-  justify-content: flex-end;
-}
-
-.project-card--reverse .project-links {
-  justify-content: flex-end;
-}
-
-/* Project Image */
-.project-image {
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
   position: relative;
-  border-radius: 10px;
-  overflow: hidden;
+}
+
+/* Left column: sticky text panel */
+.projects-text {
+  position: sticky;
+  top: 120px;
+  align-self: start;
+  min-height: 300px;
+}
+
+/* Individual project text blocks — stacked, fading in/out */
+.project-text {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.project-image img {
+/* First text block establishes height for the sticky container */
+.project-text:first-child {
+  position: relative;
+}
+
+.project-text.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Right column: scrollable images */
+.projects-images {
+  display: flex;
+  flex-direction: column;
+  gap: 100px;
+}
+
+/* Individual image blocks — start hidden, fade in via IntersectionObserver */
+.image-block {
+  min-height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.image-block.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.image-block img {
   width: 100%;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.project-image {
-  cursor: pointer;
-}
-
-/* Hover-swap (Ludex + WebGuardian + Object Detection) */
-.hover-swap {
-  position: relative;
-  overflow: hidden;
-  border-radius: 10px;
-}
-
-.hover-swap img {
-  width: 100%;
-  display: block;
-  border-radius: 10px;
-  transition: opacity 1s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    filter 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  transition-delay: 50ms;
-  will-change: opacity, transform, filter;
-}
-
-.img-default {
-  position: relative;
-  z-index: 1;
-}
-
-.img-hover {
-  position: absolute;
-  top: 0;
-  left: 0;
-  opacity: 0;
-  transform: scale(1.04);
-  filter: brightness(1.08) saturate(1.05);
-}
-
-.hover-swap:hover .img-hover,
-.hover-swap.hover-active .img-hover {
-  opacity: 1;
-  transform: scale(1);
-  filter: brightness(1) saturate(1);
-}
-
-.hover-swap:hover .img-default,
-.hover-swap.hover-active .img-default {
-  opacity: 0;
-  transform: scale(0.97);
-  filter: brightness(0.9);
-}
-
-.hover-swap:hover img {
-  transform: scale(1.02);
-}
-
-.project-card:hover .project-image {
-  box-shadow: 0 12px 48px rgba(100, 255, 218, 0.18);
-}
-
-/* Project image — no transform transition (JS drives it via rAF) */
-.project-image {
-  transition: box-shadow 0.4s ease;
-}
-
-/* File Converter pipeline placeholder */
+/* File Converter pipeline placeholder — standard image block treatment */
 .placeholder-system {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
   min-height: 220px;
   border-radius: 10px;
   background: linear-gradient(135deg, rgba(100, 255, 218, 0.05), rgba(100, 255, 218, 0.02));
   border: 1px solid rgba(255, 255, 255, 0.05);
   aspect-ratio: 16 / 10;
-  transition: box-shadow 0.3s ease;
-}
-
-.project-card:hover .placeholder-system {
-  box-shadow: 0 10px 30px rgba(100, 255, 218, 0.1);
 }
 
 /* Pipeline flow visualization */
@@ -188,11 +112,6 @@
   transition: background 0.3s ease, border-color 0.3s ease;
 }
 
-.project-card:hover .pipeline-step {
-  background: rgba(100, 255, 218, 0.1);
-  border-color: rgba(100, 255, 218, 0.3);
-}
-
 .pipeline-arrow {
   color: var(--text-muted);
   font-size: 1rem;
@@ -212,36 +131,7 @@
   animation-delay: 0.9s;
 }
 
-.system-box {
-  font-family: var(--font-mono);
-  font-size: 0.875rem;
-  color: var(--accent);
-  text-align: center;
-  opacity: 0.8;
-  padding: 20px;
-  letter-spacing: 0.5px;
-}
 
-.project-image-overlay {
-  position: absolute;
-  inset: 0;
-  background: transparent;
-  border-radius: 10px;
-  transition: background var(--transition-med);
-  pointer-events: none;
-}
-
-/* Project image hover — shadow only, no transform conflict */
-.project-card:hover .project-image img {
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-}
-
-/* Project Info */
-.project-info {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
 
 .project-overline {
   color: var(--accent);
@@ -255,11 +145,6 @@
   letter-spacing: -0.5px;
   color: var(--text-primary);
   transition: color 0.3s ease, letter-spacing 0.3s ease;
-}
-
-.project-card:hover .project-title {
-  letter-spacing: 0.3px;
-  color: var(--accent);
 }
 
 .project-subtitle {
@@ -289,11 +174,6 @@
   border-radius: 8px;
   padding: 20px 24px;
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-}
-
-.project-card:hover .project-description {
-  border-color: var(--accent);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
 .project-description p {
@@ -358,7 +238,6 @@
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 28px;
-  will-change: opacity, transform, filter;
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
@@ -502,11 +381,11 @@
 /* Section depth transition */
 section {
   transform-origin: center center;
-  transition: filter 0.6s ease;
+  transition: opacity 0.6s ease;
 }
 
 section.section-depth-active {
-  filter: brightness(1.02);
+  opacity: 0.98;
 }
 
 /* ============================================
@@ -628,6 +507,3 @@ section.section-depth-active {
   letter-spacing: 0.5px;
 }
 
-.btn-outline {
-  border-color: var(--accent);
-}

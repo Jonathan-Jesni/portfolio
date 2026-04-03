@@ -123,159 +123,163 @@
         <span class="heading-line"></span>
       </h2>
 
-      <!-- Project 1: Ludex -->
-      <article class="project-card reveal reveal-left" id="project-ludex">
-        <div class="card-spotlight"></div>
-        <div class="project-image hover-swap">
-          <img src="assets/ludex-login.png" class="img-default" alt="Steam login integration for Ludex" loading="lazy"
-            decoding="async">
-          <img src="assets/ludex-recommendations.png" class="img-hover"
-            alt="Ludex personalized game recommendations interface" loading="lazy" decoding="async">
-        </div>
-        <div class="project-info">
-          <p class="project-overline mono">Featured Project</p>
-          <h3 class="project-title">Ludex <span class="project-subtitle">— Hybrid Recommendation System</span></h3>
-          <div class="project-description">
-            <p>A hybrid recommendation engine fusing TF-IDF content modeling with implicit-feedback collaborative
-              filtering (ALS). Serves personalized game recommendations via anchor-based profiling, score-normalized
-              fusion, and MMR-based re-ranking — handling cold-start users out of the box.</p>
+      <!-- ===== STICKY SPLIT-SCROLL LAYOUT ===== -->
+      <div class="projects-wrapper">
+        <!-- LEFT: Sticky project descriptions -->
+        <div class="projects-text">
+          <!-- Project 0: Ludex -->
+          <div class="project-text active" data-project="0" id="project-ludex">
+            <p class="project-overline mono">Featured Project</p>
+            <h3 class="project-title">Ludex <span class="project-subtitle">— Hybrid Recommendation System</span></h3>
+            <div class="project-description">
+              <p>A hybrid recommendation engine fusing TF-IDF content modeling with implicit-feedback collaborative
+                filtering (ALS). Serves personalized game recommendations via anchor-based profiling, score-normalized
+                fusion, and MMR-based re-ranking — handling cold-start users out of the box.</p>
+            </div>
+            <p class="project-built-with mono">Built with: Python, Scikit-learn, Implicit ALS, Steam API</p>
+            <ul class="project-tags mono">
+              <li>Machine Learning</li>
+              <li>Recommendation Systems</li>
+              <li>Python</li>
+            </ul>
+            <div class="project-links">
+              <a href="https://github.com/Jonathan-Jesni/Ludex" target="_blank" rel="noopener noreferrer"
+                aria-label="GitHub Repository" class="project-link" id="ludex-github">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                </svg>
+              </a>
+            </div>
           </div>
-          <p class="project-built-with mono">Built with: Python, Scikit-learn, Implicit ALS, Steam API</p>
-          <ul class="project-tags mono">
-            <li>Machine Learning</li>
-            <li>Recommendation Systems</li>
-            <li>Python</li>
-          </ul>
-          <div class="project-links">
-            <a href="https://github.com/Jonathan-Jesni/Ludex" target="_blank" rel="noopener noreferrer"
-              aria-label="GitHub Repository" class="project-link" id="ludex-github">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path
-                  d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
-              </svg>
-            </a>
-          </div>
-        </div>
-      </article>
 
-      <!-- Project 2: File Converter -->
-      <article class="project-card project-card--reverse reveal reveal-right" id="project-file-converter">
-        <div class="card-spotlight"></div>
-        <div class="project-image placeholder-system">
-          <div class="pipeline-flow">
-            <span class="pipeline-step">PDF</span>
-            <span class="pipeline-arrow">→</span>
-            <span class="pipeline-step">Parse</span>
-            <span class="pipeline-arrow">→</span>
-            <span class="pipeline-step">Structure</span>
-            <span class="pipeline-arrow">→</span>
-            <span class="pipeline-step">Render</span>
-            <span class="pipeline-arrow">→</span>
-            <span class="pipeline-step">DOCX</span>
+          <!-- Project 1: File Converter -->
+          <div class="project-text" data-project="1" id="project-file-converter">
+            <p class="project-overline mono">Featured Project</p>
+            <h3 class="project-title">File Converter <span class="project-subtitle">— Document Processing Engine</span></h3>
+            <div class="project-description">
+              <p>A deterministic two-pass document conversion engine — structural analysis separated from rendering.
+                Handles paragraph reconstruction, list detection, heading inference, and conservative table extraction
+                with fully explainable outputs. No OCR, no ML, fully deterministic.</p>
+              <p class="project-note">Evolving into a full document processing suite with multi-format conversion and
+                PDF compression.</p>
+            </div>
+            <p class="project-built-with mono">Built with: Python, Two-Pass Architecture</p>
+            <ul class="project-tags mono">
+              <li>Python</li>
+              <li>Document Processing</li>
+              <li>Systems Design</li>
+            </ul>
+            <div class="project-links">
+              <a href="https://github.com/Jonathan-Jesni/pdf_converter" target="_blank" rel="noopener noreferrer"
+                aria-label="GitHub Repository" class="project-link" id="converter-github">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                </svg>
+              </a>
+            </div>
           </div>
-        </div>
-        <div class="project-info">
-          <p class="project-overline mono">Featured Project</p>
-          <h3 class="project-title">File Converter <span class="project-subtitle">— Document Processing Engine</span>
-          </h3>
-          <div class="project-description">
-            <p>A deterministic two-pass document conversion engine — structural analysis separated from rendering.
-              Handles paragraph reconstruction, list detection, heading inference, and conservative table extraction
-              with fully explainable outputs. No OCR, no ML, fully deterministic.</p>
-            <p class="project-note">Evolving into a full document processing suite with multi-format conversion and
-              PDF compression.</p>
-          </div>
-          <p class="project-built-with mono">Built with: Python, Two-Pass Architecture</p>
-          <ul class="project-tags mono">
-            <li>Python</li>
-            <li>Document Processing</li>
-            <li>Systems Design</li>
-          </ul>
-          <div class="project-links">
-            <a href="https://github.com/Jonathan-Jesni/pdf_converter" target="_blank" rel="noopener noreferrer"
-              aria-label="GitHub Repository" class="project-link" id="converter-github">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path
-                  d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
-              </svg>
-            </a>
-          </div>
-        </div>
-      </article>
 
-      <!-- Project 3: WebGuardian -->
-      <article class="project-card reveal reveal-left" id="project-webguardian">
-        <div class="card-spotlight"></div>
-        <div class="project-image hover-swap">
-          <img src="assets/webguardian-phishing.png" class="img-default" alt="Phishing detection warning overlay"
-            loading="lazy" decoding="async">
-          <img src="assets/webguardian-safe.png" class="img-hover" alt="Safe website verification overlay"
-            loading="lazy" decoding="async">
-        </div>
-        <div class="project-info">
-          <p class="project-overline mono">Featured Project</p>
-          <h3 class="project-title">WebGuardian <span class="project-subtitle">— Phishing Detection System</span></h3>
-          <div class="project-description">
-            <p>Multimodal phishing detection combining Char-CNN + LSTM (URL analysis) and MobileNetV2 (visual
-              analysis) via late fusion. Achieves <strong>98.73% accuracy</strong> on <strong>3,000 real-world
-                webpages</strong> with <strong>~35ms inference</strong> — deployed as a production Chrome extension
-              for real-time, on-device threat detection.</p>
+          <!-- Project 2: WebGuardian -->
+          <div class="project-text" data-project="2" id="project-webguardian">
+            <p class="project-overline mono">Featured Project</p>
+            <h3 class="project-title">WebGuardian <span class="project-subtitle">— Phishing Detection System</span></h3>
+            <div class="project-description">
+              <p>Multimodal phishing detection combining Char-CNN + LSTM (URL analysis) and MobileNetV2 (visual
+                analysis) via late fusion. Achieves <strong>98.73% accuracy</strong> on <strong>3,000 real-world
+                  webpages</strong> with <strong>~35ms inference</strong> — deployed as a production Chrome extension
+                for real-time, on-device threat detection.</p>
+            </div>
+            <p class="project-built-with mono">Built with: Python, Char-CNN + LSTM, MobileNetV2, Chrome Extension</p>
+            <ul class="project-tags mono">
+              <li>Deep Learning</li>
+              <li>Cybersecurity</li>
+              <li>Computer Vision</li>
+            </ul>
+            <div class="project-links">
+              <a href="https://github.com/Jonathan-Jesni" target="_blank" rel="noopener noreferrer"
+                aria-label="GitHub Repository" class="project-link" id="guardian-github">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                </svg>
+              </a>
+            </div>
           </div>
-          <p class="project-built-with mono">Built with: Python, Char-CNN + LSTM, MobileNetV2, Chrome Extension</p>
-          <ul class="project-tags mono">
-            <li>Deep Learning</li>
-            <li>Cybersecurity</li>
-            <li>Computer Vision</li>
-          </ul>
-          <div class="project-links">
-            <a href="https://github.com/Jonathan-Jesni" target="_blank" rel="noopener noreferrer"
-              aria-label="GitHub Repository" class="project-link" id="guardian-github">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path
-                  d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
-              </svg>
-            </a>
-          </div>
-        </div>
-      </article>
 
-      <!-- Project 4: GPU Object Detection -->
-      <article class="project-card project-card--reverse reveal reveal-right" id="project-gpu-detection">
-        <div class="card-spotlight"></div>
-        <div class="project-image hover-swap">
-          <img src="assets/object-detection-main.png" class="img-default"
-            alt="Synthetic object detection with bounding boxes" loading="lazy" decoding="async">
-          <img src="assets/object-detection-alt.png" class="img-hover" alt="3D rendered scene without annotations"
-            loading="lazy" decoding="async">
-        </div>
-        <div class="project-info">
-          <p class="project-overline mono">Featured Project</p>
-          <h3 class="project-title">Synthetic Data Object Detection <span class="project-subtitle">— Detection
-              Pipeline</span></h3>
-          <div class="project-description">
-            <p>End-to-end object detection trained on <strong>zero real-world images</strong> — entirely synthetic
-              data generated in Blender with randomized 3D scenes. YOLOv8 Nano on 640×640 renders achieves
-              <strong>0.997 precision</strong>, <strong>1.000 recall</strong>, and <strong>0.995 mAP@50</strong>,
-              proving synthetic-only training can match real-data performance.
-            </p>
-          </div>
-          <p class="project-built-with mono">Built with: Python, Blender, YOLOv8, Ultralytics</p>
-          <ul class="project-tags mono">
-            <li>Computer Vision</li>
-            <li>Synthetic Data</li>
-            <li>Deep Learning</li>
-          </ul>
-          <div class="project-links">
-            <a href="https://github.com/Jonathan-Jesni/synthetic-data-object-detection" target="_blank"
-              rel="noopener noreferrer" aria-label="GitHub Repository" class="project-link" id="gpu-github">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path
-                  d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
-              </svg>
-            </a>
+          <!-- Project 3: Synthetic Data Object Detection -->
+          <div class="project-text" data-project="3" id="project-gpu-detection">
+            <p class="project-overline mono">Featured Project</p>
+            <h3 class="project-title">Synthetic Data Object Detection <span class="project-subtitle">— Detection
+                Pipeline</span></h3>
+            <div class="project-description">
+              <p>End-to-end object detection trained on <strong>zero real-world images</strong> — entirely synthetic
+                data generated in Blender with randomized 3D scenes. YOLOv8 Nano on 640×640 renders achieves
+                <strong>0.997 precision</strong>, <strong>1.000 recall</strong>, and <strong>0.995 mAP@50</strong>,
+                proving synthetic-only training can match real-data performance.
+              </p>
+            </div>
+            <p class="project-built-with mono">Built with: Python, Blender, YOLOv8, Ultralytics</p>
+            <ul class="project-tags mono">
+              <li>Computer Vision</li>
+              <li>Synthetic Data</li>
+              <li>Deep Learning</li>
+            </ul>
+            <div class="project-links">
+              <a href="https://github.com/Jonathan-Jesni/synthetic-data-object-detection" target="_blank"
+                rel="noopener noreferrer" aria-label="GitHub Repository" class="project-link" id="gpu-github">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                </svg>
+              </a>
+            </div>
           </div>
         </div>
-      </article>
+
+        <!-- RIGHT: Scrollable images -->
+        <div class="projects-images">
+          <div class="image-block" data-project="0">
+            <img src="assets/ludex-login.png" alt="Steam login integration for Ludex" decoding="async">
+          </div>
+          <div class="image-block" data-project="0">
+            <img src="assets/ludex-recommendations.png" alt="Ludex personalized game recommendations interface"
+              decoding="async">
+          </div>
+          <div class="image-block" data-project="1">
+            <div class="placeholder-system">
+              <div class="pipeline-flow">
+                <span class="pipeline-step">PDF</span>
+                <span class="pipeline-arrow">→</span>
+                <span class="pipeline-step">Parse</span>
+                <span class="pipeline-arrow">→</span>
+                <span class="pipeline-step">Structure</span>
+                <span class="pipeline-arrow">→</span>
+                <span class="pipeline-step">Render</span>
+                <span class="pipeline-arrow">→</span>
+                <span class="pipeline-step">DOCX</span>
+              </div>
+            </div>
+          </div>
+          <div class="image-block" data-project="2">
+            <img src="assets/webguardian-phishing.png" alt="Phishing detection warning overlay" loading="lazy"
+              decoding="async">
+          </div>
+          <div class="image-block" data-project="2">
+            <img src="assets/webguardian-safe.png" alt="Safe website verification overlay" loading="lazy"
+              decoding="async">
+          </div>
+          <div class="image-block" data-project="3">
+            <img src="assets/object-detection-main.png" alt="Synthetic object detection with bounding boxes"
+              decoding="async">
+          </div>
+          <div class="image-block" data-project="3">
+            <img src="assets/object-detection-alt.png" alt="3D rendered scene without annotations" loading="lazy"
+              decoding="async">
+          </div>
+        </div>
+      </div>
 
       <div class="projects-cta reveal">
         <p class="mono">Want to explore more?</p>
@@ -499,6 +503,7 @@
   </footer>
 
   <script type="module" src="js/main.js"></script>
+  <script nomodule src="script_backup.js"></script>
 </body>
 
 </html>

@@ -9,10 +9,9 @@ import {
   applyScrollTransforms,
   applyDepthLayers,
   updateProgressBar,
+  smoothVelocity,
 } from './scrollEngine.js';
-import { initTiltSystem, updateTilt } from './tiltSystem.js';
-import { initCursorEffects, updateCursorEffects, mouseState } from './cursorEffects.js';
-import * as scrollEngine from './scrollEngine.js';
+import { initCursorEffects, updateCursorEffects } from './cursorEffects.js';
 
 // ============================================
 // DOM CACHE
@@ -22,6 +21,53 @@ const progressBar = document.getElementById('progress-bar');
 const mobileToggle = document.getElementById('mobile-toggle');
 const mobileMenu = document.getElementById('mobile-menu');
 const anchorLinks = document.querySelectorAll('a[href^="#"]');
+
+// Scroll-synced project text switcher (desktop only)
+const imageBlocks = document.querySelectorAll('.image-block');
+const projectTexts = document.querySelectorAll('.project-text');
+let lastActiveProject = '0';
+
+function updateActiveProject() {
+  const viewportCenter = window.innerHeight * 0.45;
+  let closestBlock = null;
+  let closestDist = Infinity;
+
+  for (let i = 0; i < imageBlocks.length; i++) {
+    const rect = imageBlocks[i].getBoundingClientRect();
+    const blockCenter = rect.top + rect.height * 0.5;
+    const dist = Math.abs(blockCenter - viewportCenter);
+    if (dist < closestDist) {
+      closestDist = dist;
+      closestBlock = imageBlocks[i];
+    }
+  }
+
+  if (closestBlock) {
+    const projectId = closestBlock.dataset.project;
+    if (projectId !== lastActiveProject) {
+      for (let i = 0; i < projectTexts.length; i++) {
+        projectTexts[i].classList.remove('active');
+      }
+      const target = document.querySelector(`.project-text[data-project="${projectId}"]`);
+      if (target) target.classList.add('active');
+      lastActiveProject = projectId;
+    }
+  }
+}
+
+// ============================================
+// IMAGE BLOCK REVEAL — IntersectionObserver
+// ============================================
+const imageBlockObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      imageBlockObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+imageBlocks.forEach(block => imageBlockObserver.observe(block));
 
 // ============================================
 // RESIZE HANDLER
@@ -67,8 +113,8 @@ function mainLoop(timestamp) {
   updateProgressBar(scrollY, viewportHeight, progressBar);
 
   if (!isMobile) {
+    updateActiveProject();
     updateCursorEffects();
-    updateTilt(mouseState);
   }
 
   requestAnimationFrame(mainLoop);
@@ -79,8 +125,7 @@ function mainLoop(timestamp) {
 // (cursor trail, magnetic buttons, 3D tilt, spotlight)
 // ============================================
 if (!isMobile) {
-  initCursorEffects(() => scrollEngine.smoothVelocity);
-  initTiltSystem(mouseState);
+  initCursorEffects(() => smoothVelocity);
 }
 
 // ============================================
@@ -98,6 +143,11 @@ if (document.readyState === 'complete') {
   document.addEventListener('DOMContentLoaded', () => {
     registerElements();
     lastLoopScrollY = -1;
+  });
+  
+  // CRITICAL: Re-calculate positions after all images load and claim layout space
+  window.addEventListener('load', () => {
+    updateCachedPositions();
   });
 }
 
@@ -141,20 +191,6 @@ anchorLinks.forEach((anchor) => {
       e.preventDefault();
       target.scrollIntoView({ behavior: 'smooth' });
     }
-  });
-});
-
-// ============================================
-// HOVER INTENT FOR IMAGE SWAPS
-// ============================================
-document.querySelectorAll('.hover-swap').forEach(card => {
-  let timeout;
-  card.addEventListener('mouseenter', () => {
-    timeout = setTimeout(() => card.classList.add('hover-active'), 60);
-  });
-  card.addEventListener('mouseleave', () => {
-    clearTimeout(timeout);
-    card.classList.remove('hover-active');
   });
 });
 

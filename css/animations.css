@@ -6,7 +6,6 @@
 .reveal {
   opacity: 0;
   transform: translateY(40px);
-  will-change: opacity, transform;
 }
 
 /* Hero reveals should be visible immediately (JS snaps them on load) */

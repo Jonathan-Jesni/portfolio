@@ -31,6 +31,7 @@ body::after {
   pointer-events: none;
   opacity: var(--spotlight-opacity, 0);
   transition: opacity 0.5s ease;
+  will-change: opacity;
 }
 
 /* Parallax background shift */
@@ -49,9 +50,10 @@ body.parallax::before {
   transform: translate(-50%, -50%);
   z-index: 999;
   mix-blend-mode: screen;
-  filter: blur(20px);
+  filter: blur(16px);
   transition: none;
   opacity: 0;
+  will-change: transform, opacity;
   animation: cursorFadeIn 0.5s ease forwards 0.3s;
 }
 
@@ -87,31 +89,46 @@ body.parallax::before {
     display: flex;
   }
 
-  .project-card,
-  .project-card--reverse {
-    grid-template-columns: 1fr;
-    gap: 24px;
+  /* Mobile: stacked layout — dissolve containers, interleave via order */
+  .projects-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
   }
 
-  .project-card--reverse .project-image {
-    order: 0;
+  .projects-text,
+  .projects-images {
+    display: contents;
   }
 
-  .project-card--reverse .project-info {
-    order: 0;
-    text-align: left;
+  .projects-text {
+    position: static;
+  }
+
+  .project-text {
+    position: relative;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+    transition: none;
+  }
+
+  /* Interleave: images first, then text for each project */
+  .image-block[data-project="0"] { order: 1; }
+  .project-text[data-project="0"] { order: 2; }
+  .image-block[data-project="1"] { order: 3; }
+  .project-text[data-project="1"] { order: 4; }
+  .image-block[data-project="2"] { order: 5; }
+  .project-text[data-project="2"] { order: 6; }
+  .image-block[data-project="3"] { order: 7; }
+  .project-text[data-project="3"] { order: 8; }
+
+  .image-block {
+    min-height: auto;
   }
 
   .about-content {
     grid-template-columns: 1fr;
-  }
-
-  .project-card--reverse .project-tags {
-    justify-content: flex-start;
-  }
-
-  .project-card--reverse .project-links {
-    justify-content: flex-start;
   }
 
   .skills-grid {
@@ -148,8 +165,8 @@ body.parallax::before {
     display: none;
   }
 
-  .project-card {
-    margin-bottom: 64px;
+  .image-block {
+    min-height: auto;
   }
 
   .skills-grid {
@@ -186,10 +203,6 @@ body.parallax::before {
 
   .cursor-glow,
   .cursor-trail {
-    display: none;
-  }
-
-  .card-spotlight {
     display: none;
   }
 
