@@ -14,13 +14,7 @@
   transform: none;
 }
 
-.reveal-left {
-  transform: translateX(-105px);
-}
 
-.reveal-right {
-  transform: translateX(105px);
-}
 
 /* ============================================
    KEYFRAME ANIMATIONS

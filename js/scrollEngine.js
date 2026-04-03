@@ -8,11 +8,11 @@ const scrollElements = [];
 // ============================================
 // SCROLL VELOCITY TRACKER (shared state)
 // ============================================
-export let scrollVelocity = 0;
-export let lastScrollY = 0;
+let scrollVelocity = 0;
+let lastScrollY = 0;
 export let smoothVelocity = 0;
-export let isScrolling = false;
-export let scrollIdleTimer = 0;
+let isScrolling = false;
+let scrollIdleTimer = 0;
 
 // ============================================
 // SCROLL PROGRESS BAR — dynamic interpolation
@@ -26,16 +26,14 @@ let scrollProgressTarget = 0;
 export function registerElements() {
   // General reveals
   document.querySelectorAll('.reveal').forEach((el, idx) => {
-    const isLeft = el.classList.contains('reveal-left');
-    const isRight = el.classList.contains('reveal-right');
     const isHero = el.closest('#hero') !== null;
     const seed = seededRandom(idx + 1);
 
     scrollElements.push({
       el,
-      type: isLeft ? 'left' : isRight ? 'right' : 'up',
-      offsetX: isLeft ? -105 : isRight ? 105 : 0,
-      offsetY: isLeft || isRight ? 0 : 52,
+      type: 'up',
+      offsetX: 0,
+      offsetY: 52,
       isHero,
       isSkill: false,
       // Organic variation per element
@@ -45,8 +43,8 @@ export function registerElements() {
       cachedTop: 0,
       cachedHeight: 0,
       // Lerp state for smooth interpolation
-      sx: isLeft ? -105 : isRight ? 105 : 0,
-      sy: isLeft || isRight ? 0 : 52,
+      sx: 0,
+      sy: 52,
       ss: 0.96,
       so: 0,
       revealed: false,
@@ -84,7 +82,6 @@ export function registerElements() {
       staggerIndex: i,
       isHero: false,
       isSkill: false,
-      isProjectCard: false,
       parallaxMul: 0.9 + seed * 0.2,
       scaleMul: 0.97 + seed * 0.06,
       delayOffset: seed * 0.03,
@@ -162,7 +159,6 @@ const mobileFactor = isMobile ? 0.5 : 1;
 
 export function applyScrollTransforms(scrollY, viewportHeight, time) {
   const lerpFactor = 0.075;
-  const projectLerpFactor = 0.065;
   // Idle blend: ramp up floating when scroll stops
   const idleBlend = isScrolling ? 0 : Math.min(scrollIdleTimer * 0.3, 1);
 
@@ -200,9 +196,7 @@ export function applyScrollTransforms(scrollY, viewportHeight, time) {
     const targetScale = baseScale * item.scaleMul;
 
     // Softer slide easing: (1-progress)^1.6 — smoother deceleration, less abrupt
-    const slideEase = item.isProjectCard
-      ? Math.pow(1 - progress, 1.6)
-      : Math.pow(1 - progress, 1.6);
+    const slideEase = Math.pow(1 - progress, 1.6);
     // No velocityBoost on translation — eliminates scroll-spike jitter
     const targetX = item.offsetX * slideEase * mobileFactor * item.parallaxMul;
     const targetY = item.offsetY * (1 - progress) * mobileFactor * item.parallaxMul;
@@ -211,17 +205,17 @@ export function applyScrollTransforms(scrollY, viewportHeight, time) {
     const blurRaw = 1 - progress;
     const blurCurve = Math.pow(blurRaw, 2.2);
 
-    // Idle float — disabled for project cards to prevent wobble during reveal
+    // Idle float
     let idleY = 0;
     let idleScale = 1;
-    if (!item.isProjectCard && progress > 0.5) {
+    if (progress > 0.5) {
       const idle = getIdleFloat(idx, time);
       idleY = idle.y * idleBlend;
       idleScale = 1 + (idle.s - 1) * idleBlend;
     }
 
     // Lerp toward targets
-    const lf = item.isProjectCard ? projectLerpFactor : lerpFactor;
+    const lf = lerpFactor;
     item.sx += (targetX - item.sx) * lf;
     item.sy += (targetY - item.sy) * lf;
     item.ss += (targetScale - item.ss) * lf;
@@ -245,8 +239,8 @@ export function applyScrollTransforms(scrollY, viewportHeight, time) {
       return;
     }
 
-    // Default + project cards — no filter for project cards; disable blur during scroll for others
-    const blurMul = item.isProjectCard ? 0 : ((isMobile || isScrolling) ? 0 : 0.25);
+    // Default — disable blur during scroll
+    const blurMul = (isMobile || isScrolling) ? 0 : 0.25;
     const blurAmount = blurCurve * blurMul;
     const finalScale = item.ss * idleScale;
     const filterVal = blurAmount > 0.05 ? `blur(${blurAmount.toFixed(2)}px)` : 'none';
@@ -254,20 +248,12 @@ export function applyScrollTransforms(scrollY, viewportHeight, time) {
     const scrollTransform =
       `translate3d(${item.sx.toFixed(1)}px,${(item.sy + idleY).toFixed(2)}px,0) scale(${finalScale.toFixed(2)})`;
 
-    // Store scroll transform — tilt system will combine when hovering
+    // Store scroll transform
     item.el.__scrollTransform = scrollTransform;
 
-    if (item.isProjectCard && !isMobile) {
-      // Desktop Project cards: scroll system writes opacity + filter ONLY.
-      // Transform is strictly unified under the tilt system's rAF loop to prevent conflicts.
-      item.el.style.opacity = item.so.toFixed(2);
-      item.el.style.filter = filterVal;
-    } else {
-      // Mobile project cards & all other elements
-      item.el.style.opacity = item.so.toFixed(2);
-      item.el.style.transform = scrollTransform;
-      item.el.style.filter = filterVal;
-    }
+    item.el.style.opacity = item.so.toFixed(2);
+    item.el.style.transform = scrollTransform;
+    item.el.style.filter = filterVal;
   });
 }
 
