@@ -1,0 +1,68 @@
+/* ============================================
+   INTRO LOADER — Multilingual Greeting Sequence
+   ============================================ */
+#intro-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--bg-primary);
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 60px; /* Top-left natural terminal bounding */
+  transition: opacity 0.4s ease, visibility 0.4s ease, transform 0.4s ease;
+  transform: scale(1);
+}
+
+#intro-loader.loader-done {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: scale(0.98);
+}
+
+#greeting-text {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--accent);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.boot-line {
+  opacity: 0;
+  transform: translateY(4px);
+  animation: bootLineIn 0.15s ease forwards;
+}
+
+@keyframes bootLineIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.terminal-cursor {
+  display: inline-block;
+  margin-left: 2px;
+  animation: termBlink 1s step-end infinite;
+}
+
+.boot-time {
+  opacity: 0.5;
+  margin-right: 8px;
+}
+
+@keyframes termBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+
+/* Hide loader if JS is disabled */
+body.loading {
+  overflow: hidden;
+}

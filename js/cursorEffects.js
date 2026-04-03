@@ -14,7 +14,7 @@ let glowX = 0, glowY = 0;
 let cursorGlow;
 
 // --- Trail particles ---
-const TRAIL_COUNT = 10;
+const TRAIL_COUNT = 5;
 const trails = [];
 let trailIndex = 0;
 let lastTrailX = 0, lastTrailY = 0;
@@ -151,10 +151,10 @@ export function updateCursorEffects() {
 
     if (dist < threshold) {
       const pull = 1 - dist / threshold;
-      const maxShift = 8;
+      const maxShift = 4;
       b.tx = Math.max(-maxShift, Math.min(maxShift, dx * pull * 0.15));
       b.ty = Math.max(-maxShift, Math.min(maxShift, dy * pull * 0.15));
-      b.ts = 1 + pull * 0.04;
+      b.ts = 1 + pull * 0.02;
     } else {
       b.tx = 0;
       b.ty = 0;

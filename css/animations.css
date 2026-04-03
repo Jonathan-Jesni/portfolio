@@ -5,13 +5,10 @@
    ============================================ */
 .reveal {
   opacity: 0;
-  transform: translateY(40px);
 }
 
-/* Hero reveals should be visible immediately (JS snaps them on load) */
 #hero .reveal {
   opacity: 0;
-  transform: none;
 }
 
 

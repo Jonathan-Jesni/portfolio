@@ -20,6 +20,7 @@
   <link rel="stylesheet" href="css/components.css" />
   <link rel="stylesheet" href="css/animations.css" />
   <link rel="stylesheet" href="css/effects.css" />
+  <link rel="stylesheet" href="css/loader.css" />
 </head>
 
 <body class="parallax">
@@ -32,6 +33,12 @@
       }
     </style>
   </noscript>
+
+  <!-- ===== INTRO LOADER ===== -->
+  <div id="intro-loader">
+    <span id="greeting-text"></span>
+  </div>
+
   <!-- ===== SCROLL PROGRESS BAR ===== -->
   <div id="progress-bar"></div>
 
@@ -67,9 +74,8 @@
     </div>
   </nav>
 
-  <!-- ===== HERO ===== -->
   <section id="hero">
-    <div class="hero-content reveal">
+    <div class="hero-content staged-hero">
       <p class="hero-greeting mono">Hi, my name is</p>
       <h1 class="hero-name">Jonathan<span class="accent">.</span></h1>
       <p class="hero-building mono">&gt; currently.building: smarter tools for real-world problems</p>
@@ -301,70 +307,70 @@
       </h2>
       <div class="skills-grid reveal">
         <div class="skill-category" id="skill-languages">
-          <h3 class="skill-category-title mono">
-            <span class="skill-icon">⟨/⟩</span> Languages
+          <h3 class="skill-category-title">
+            <span class="skill-status mono">[ CORE ]</span> Languages
           </h3>
           <ul class="skill-list">
-            <li>Python</li>
-            <li>Java</li>
-            <li>C / C++</li>
-            <li>Dart</li>
-            <li>Flask</li>
-            <li>Flutter</li>
+            <li>Python <span class="skill-tag">(core)</span></li>
+            <li>Java <span class="skill-tag">(oop)</span></li>
+            <li>C / C++ <span class="skill-tag">(systems)</span></li>
+            <li>Dart <span class="skill-tag">(ui)</span></li>
+            <li>Flask <span class="skill-tag">(api)</span></li>
+            <li>Flutter <span class="skill-tag">(mobile)</span></li>
           </ul>
         </div>
         <div class="skill-category" id="skill-tools">
-          <h3 class="skill-category-title mono">
-            <span class="skill-icon">⚙</span> Libraries & Tools
+          <h3 class="skill-category-title">
+            <span class="skill-status mono">[ LOADED ]</span> Libraries & Tools
           </h3>
           <ul class="skill-list">
-            <li>PyTorch</li>
-            <li>TensorFlow</li>
-            <li>OpenCV</li>
-            <li>NumPy</li>
-            <li>Pandas</li>
+            <li>PyTorch <span class="skill-tag">(training)</span></li>
+            <li>TensorFlow <span class="skill-tag">(models)</span></li>
+            <li>OpenCV <span class="skill-tag">(vision)</span></li>
+            <li>NumPy <span class="skill-tag">(compute)</span></li>
+            <li>Pandas <span class="skill-tag">(data)</span></li>
           </ul>
         </div>
         <div class="skill-category" id="skill-ai">
-          <h3 class="skill-category-title mono">
-            <span class="skill-icon">◈</span> AI / Machine Learning
+          <h3 class="skill-category-title">
+            <span class="skill-status mono">[ ACTIVE ]</span> AI / Machine Learning
           </h3>
           <ul class="skill-list">
-            <li>Machine Learning</li>
-            <li>Deep Learning (CNN)</li>
-            <li>Computer Vision</li>
-            <li>Recommender Systems</li>
-            <li>Object Detection (YOLO)</li>
+            <li>Machine Learning <span class="skill-tag">(pipelines)</span></li>
+            <li>Deep Learning <span class="skill-tag">(cnn)</span></li>
+            <li>Computer Vision <span class="skill-tag">(analysis)</span></li>
+            <li>Recommender Systems <span class="skill-tag">(matching)</span></li>
+            <li>YOLO <span class="skill-tag">(real-time)</span></li>
           </ul>
         </div>
         <div class="skill-category" id="skill-security">
-          <h3 class="skill-category-title mono">
-            <span class="skill-icon">⛊</span> Cybersecurity
+          <h3 class="skill-category-title">
+            <span class="skill-status mono">[ SECURE ]</span> Cybersecurity
           </h3>
           <ul class="skill-list">
-            <li>Threat Detection</li>
-            <li>Phishing Analysis</li>
-            <li>Network Security</li>
+            <li>Threat Detection <span class="skill-tag">(real-time)</span></li>
+            <li>Phishing Analysis <span class="skill-tag">(nlp/cv)</span></li>
+            <li>Network Security <span class="skill-tag">(monitoring)</span></li>
           </ul>
         </div>
         <div class="skill-category" id="skill-networking">
-          <h3 class="skill-category-title mono">
-            <span class="skill-icon">⬡</span> Graphics / Simulation
+          <h3 class="skill-category-title">
+            <span class="skill-status mono">[ RENDER ]</span> Graphics / Simulation
           </h3>
           <ul class="skill-list">
-            <li>Blender (bpy)</li>
-            <li>Synthetic Data Generation</li>
+            <li>Blender <span class="skill-tag">(bpy)</span></li>
+            <li>Synthetic Data <span class="skill-tag">(generation)</span></li>
           </ul>
         </div>
         <div class="skill-category" id="skill-systems">
-          <h3 class="skill-category-title mono">
-            <span class="skill-icon">▣</span> Systems Engineering
+          <h3 class="skill-category-title">
+            <span class="skill-status mono">[ ONLINE ]</span> Systems Engineering
           </h3>
           <ul class="skill-list">
-            <li>System Architecture</li>
-            <li>Pipeline Design</li>
-            <li>Performance Optimization</li>
-            <li>GPU Computing</li>
+            <li>System Architecture <span class="skill-tag">(design)</span></li>
+            <li>Pipeline Design <span class="skill-tag">(etl)</span></li>
+            <li>Performance <span class="skill-tag">(optimization)</span></li>
+            <li>GPU Computing <span class="skill-tag">(cuda)</span></li>
           </ul>
         </div>
       </div>

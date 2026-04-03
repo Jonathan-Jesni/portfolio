@@ -14,6 +14,73 @@ import {
 import { initCursorEffects, updateCursorEffects } from './cursorEffects.js';
 
 // ============================================
+// INTRO LOADER — Multilingual Greeting Sequence
+// ============================================
+(function runIntroLoader() {
+  const loader = document.getElementById('intro-loader');
+  const greetingEl = document.getElementById('greeting-text');
+  if (!loader || !greetingEl) return;
+
+  const greetings = [
+    'initializing system', 
+    'loading modules', 
+    'allocating memory', 
+    'configuring network', 
+    'ai-core ready', 
+    'system ready'
+  ];
+
+  let i = 0;
+  const startTime = performance.now();
+
+  function pad(num) {
+    return num.toString().padStart(2, '0');
+  }
+
+  function showNext() {
+    if (i >= greetings.length) {
+      // Done — start fading loader & start hero simultaneously
+      loader.classList.add('loader-done');
+      document.body.classList.remove('loading');
+      document.body.classList.add('intro-done');
+      
+      setTimeout(() => loader.remove(), 600);
+      return;
+    }
+
+    // Calc relative timing
+    const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
+    
+    // Calc absolute timing
+    const now = new Date();
+    const timeStr = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+
+    const span = document.createElement('span');
+    span.className = 'boot-line';
+    
+    const textFormat = `<span class="boot-time">[${timeStr} | ${elapsed}s]</span> ${greetings[i]}`;
+    
+    if (i === greetings.length - 1) {
+      span.innerHTML = `${textFormat}<span class="terminal-cursor">_</span>`;
+    } else {
+      span.innerHTML = textFormat;
+    }
+    
+    greetingEl.appendChild(span);
+
+    // Final line hold vs standard line hold 
+    const holdTime = (i === greetings.length - 1) ? 350 : Math.floor(Math.random() * 40) + 160;
+
+    setTimeout(() => {
+      i++;
+      showNext();
+    }, holdTime);
+  }
+
+  showNext();
+})();
+
+// ============================================
 // DOM CACHE
 // ============================================
 const navbar = document.getElementById('navbar');
@@ -26,6 +93,7 @@ const anchorLinks = document.querySelectorAll('a[href^="#"]');
 const imageBlocks = document.querySelectorAll('.image-block');
 const projectTexts = document.querySelectorAll('.project-text');
 let lastActiveProject = '0';
+let lastActiveImageBlock = null;
 
 function updateActiveProject() {
   const viewportCenter = window.innerHeight * 0.45;
@@ -51,6 +119,12 @@ function updateActiveProject() {
       const target = document.querySelector(`.project-text[data-project="${projectId}"]`);
       if (target) target.classList.add('active');
       lastActiveProject = projectId;
+    }
+    
+    if (closestBlock !== lastActiveImageBlock) {
+      if (lastActiveImageBlock) lastActiveImageBlock.classList.remove('active');
+      closestBlock.classList.add('active');
+      lastActiveImageBlock = closestBlock;
     }
   }
 }
@@ -206,3 +280,91 @@ document.querySelectorAll('section').forEach(section => {
     section.classList.remove('section-depth-active');
   });
 });
+
+// ============================================
+// ABOUT SECTION — One-Time Typing Effect
+// ============================================
+(function initTypingEffect() {
+  const snippet = document.getElementById('about-code-snippet');
+  if (!snippet) return;
+
+  const pre = snippet.querySelector('pre');
+  if (!pre) return;
+
+  // Capture the full HTML content to type out
+  const fullHTML = pre.innerHTML;
+  let typed = false;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !typed) {
+        typed = true;
+        observer.disconnect();
+        startTyping(pre, fullHTML);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  observer.observe(snippet);
+
+  function startTyping(el, html) {
+    // Parse out text content (preserving tags)
+    const chars = [];
+    let inTag = false;
+    let tagBuffer = '';
+
+    for (let c = 0; c < html.length; c++) {
+      const ch = html[c];
+      if (ch === '<') {
+        inTag = true;
+        tagBuffer = '<';
+      } else if (ch === '>' && inTag) {
+        inTag = false;
+        tagBuffer += '>';
+        // Push the entire tag as a single "char" (instant, non-visible)
+        chars.push({ type: 'tag', value: tagBuffer });
+        tagBuffer = '';
+      } else if (inTag) {
+        tagBuffer += ch;
+      } else {
+        chars.push({ type: 'char', value: ch });
+      }
+    }
+
+    // Add cursor
+    el.innerHTML = '<span class="typing-cursor">▌</span>';
+    let rendered = '';
+    let idx = 0;
+    const CHAR_DELAY = 22; // ms per visible character
+    let lastTime = 0;
+
+    function typeFrame(timestamp) {
+      if (idx >= chars.length) {
+        // Done — remove cursor
+        el.innerHTML = rendered;
+        return;
+      }
+
+      if (!lastTime) lastTime = timestamp;
+      const elapsed = timestamp - lastTime;
+
+      if (elapsed >= CHAR_DELAY) {
+        // Type all tags instantly, then one visible char
+        while (idx < chars.length && chars[idx].type === 'tag') {
+          rendered += chars[idx].value;
+          idx++;
+        }
+        if (idx < chars.length) {
+          rendered += chars[idx].value;
+          idx++;
+        }
+        el.innerHTML = rendered + '<span class="typing-cursor">▌</span>';
+        lastTime = timestamp;
+      }
+
+      requestAnimationFrame(typeFrame);
+    }
+
+    requestAnimationFrame(typeFrame);
+  }
+})();

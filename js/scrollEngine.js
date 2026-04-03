@@ -33,7 +33,7 @@ export function registerElements() {
       el,
       type: 'up',
       offsetX: 0,
-      offsetY: 52,
+      offsetY: 24,
       isHero,
       isSkill: false,
       // Organic variation per element
@@ -44,7 +44,7 @@ export function registerElements() {
       cachedHeight: 0,
       // Lerp state for smooth interpolation
       sx: 0,
-      sy: 52,
+      sy: 24,
       ss: 0.96,
       so: 0,
       revealed: false,
@@ -57,8 +57,8 @@ export function registerElements() {
     scrollElements.push({
       el,
       type: 'skill',
-      offsetX: 0,
-      offsetY: 30,
+      offsetX: -8,
+      offsetY: 4,
       staggerIndex: i,
       isHero: false,
       isSkill: true,
@@ -67,7 +67,26 @@ export function registerElements() {
       delayOffset: seed * 0.03,
       cachedTop: 0,
       cachedHeight: 0,
-      sx: 0, sy: 30, ss: 0.96, so: 0, revealed: false,
+      sx: -8, sy: 4, ss: 0.96, so: 0, revealed: false,
+    });
+  });
+
+  // Skill list items (micro-staggered horizontal)
+  document.querySelectorAll('.skill-list li').forEach((el, i) => {
+    scrollElements.push({
+      el,
+      type: 'skill-desc',
+      offsetX: -6,
+      offsetY: 0,
+      staggerIndex: i,
+      isHero: false,
+      isSkill: true,
+      parallaxMul: 1,
+      scaleMul: 1,
+      delayOffset: (i % 6) * 0.05,
+      cachedTop: 0,
+      cachedHeight: 0,
+      sx: -6, sy: 0, ss: 1, so: 0, revealed: false,
     });
   });
 
@@ -94,6 +113,9 @@ export function registerElements() {
   // Fix: elements already in viewport on load should be immediately visible (no flicker)
   const viewportThreshold = window.innerHeight * 0.9;
   scrollElements.forEach(item => {
+    // Add GPU acceleration class mapped in css/base.css
+    item.el.classList.add('accelerate');
+    
     const rect = item.el.getBoundingClientRect();
     if (rect.top < viewportThreshold) {
       // Snap lerp state to fully visible
@@ -106,6 +128,10 @@ export function registerElements() {
       item.el.style.opacity = '1';
       item.el.style.transform = 'translate3d(0,0,0) scale(1)';
       item.el.style.filter = 'none';
+    } else {
+      // Apply initial JS hidden state since we removed CSS fallback
+      item.el.style.opacity = '0';
+      item.el.style.transform = `translate3d(${item.offsetX}px, ${item.offsetY}px, 0)`;
     }
   });
 

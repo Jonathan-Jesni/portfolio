@@ -23,8 +23,8 @@
 .project-text {
   opacity: 0;
   transform: translateY(12px);
-  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.15s ease-out,
+              transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   position: absolute;
   top: 0;
   left: 0;
@@ -44,13 +44,15 @@
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
+  transition: opacity 0.3s ease-in 0.15s,
+              transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.15s;
 }
 
 /* Right column: scrollable images */
 .projects-images {
   display: flex;
   flex-direction: column;
-  gap: 100px;
+  gap: 60px;
 }
 
 /* Individual image blocks — start hidden, fade in via IntersectionObserver */
@@ -76,6 +78,12 @@
   width: 100%;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.05);
+  transform: scale(1);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.image-block.active img {
+  transform: scale(1.02);
 }
 
 /* File Converter pipeline placeholder — standard image block treatment */
@@ -89,6 +97,12 @@
   background: linear-gradient(135deg, rgba(100, 255, 218, 0.05), rgba(100, 255, 218, 0.02));
   border: 1px solid rgba(255, 255, 255, 0.05);
   aspect-ratio: 16 / 10;
+  transform: scale(1);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.placeholder-system.active {
+  transform: scale(1.02);
 }
 
 /* Pipeline flow visualization */
@@ -229,58 +243,86 @@
    ============================================ */
 .skills-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 80px 40px;
 }
 
 .skill-category {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 28px;
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-}
-
-.skill-category:hover {
-  border-color: var(--border-hover);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
 }
 
 .skill-category-title {
-  font-size: 0.875rem;
+  font-size: 1rem;
+  font-family: var(--font-sans);
   font-weight: 500;
-  color: var(--accent);
-  margin-bottom: 16px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+  transition: color 0.2s ease;
 }
 
-.skill-icon {
-  font-size: 1rem;
-  opacity: 0.8;
+.skill-category:hover .skill-category-title {
+  color: var(--text-primary);
+}
+
+.skill-category:hover .skill-status {
+  opacity: 1;
+}
+
+.skill-status {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent);
+  opacity: 0.7;
+  letter-spacing: 0.5px;
+  transition: opacity 0.2s ease;
 }
 
 .skill-list {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .skill-list li {
   color: var(--text-secondary);
   font-size: 0.9375rem;
-  padding-left: 16px;
+  padding-left: 28px;
   position: relative;
+  transition: color 0.2s ease, transform 0.2s ease;
+  display: flex;
+  align-items: baseline;
+}
+
+.skill-list li:hover {
+  color: var(--text-primary);
+  transform: translateX(4px);
 }
 
 .skill-list li::before {
-  content: '▸';
+  content: '├─';
+  font-family: var(--font-mono);
   position: absolute;
   left: 0;
-  color: var(--accent);
-  font-size: 0.75rem;
+  color: rgba(100, 255, 218, 0.4);
+  font-size: 0.85rem;
+  top: 1px;
+}
+
+.skill-list li:last-child::before {
+  content: '└─';
+}
+
+.skill-tag {
+  font-family: var(--font-mono);
+  font-size: 0.75em;
+  opacity: 0.45;
+  margin-left: 6px;
+  pointer-events: none;
 }
 
 /* ============================================
@@ -378,6 +420,20 @@
   color: #89ddff;
 }
 
+.typing-cursor {
+  display: inline-block;
+  width: 8px;
+  animation: blinkCursor 1.06s steps(2, start) infinite;
+  color: var(--text-primary);
+  opacity: 1;
+}
+
+@keyframes blinkCursor {
+  to {
+    opacity: 0;
+  }
+}
+
 /* Section depth transition */
 section {
   transform-origin: center center;
@@ -400,14 +456,35 @@ section.section-depth-active {
 .building-card {
   background: var(--bg-card);
   border: 1px solid var(--border);
+  border-left: 2px solid var(--accent);
   border-radius: 10px;
   padding: 28px;
   transition: all var(--transition-fast);
+  box-shadow: inset 3px 0 8px rgba(100, 255, 218, 0.06);
+  position: relative;
+  overflow: hidden;
+}
+
+.building-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.3;
+  animation: shimmerBar 3s ease-in-out infinite;
+}
+
+@keyframes shimmerBar {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 
 .building-card:hover {
   border-color: var(--border-hover);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  box-shadow: inset 3px 0 8px rgba(100, 255, 218, 0.06), 0 8px 32px rgba(0, 0, 0, 0.15);
 }
 
 .building-status {
@@ -424,7 +501,19 @@ section.section-depth-active {
   height: 8px;
   background: var(--accent);
   border-radius: 50%;
-  animation: pulse 2s ease-in-out infinite;
+  animation: statusPulse 2s ease-in-out infinite;
+  box-shadow: 0 0 6px rgba(100, 255, 218, 0.4);
+}
+
+@keyframes statusPulse {
+  0%, 100% {
+    opacity: 0.5;
+    box-shadow: 0 0 4px rgba(100, 255, 218, 0.3);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 10px rgba(100, 255, 218, 0.6), 0 0 20px rgba(100, 255, 218, 0.2);
+  }
 }
 
 .building-card h3 {
