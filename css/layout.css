@@ -157,23 +157,48 @@ body.intro-done .staged-hero {
   transform: scale(1);
 }
 
-.staged-hero > * {
+.staged-hero>* {
   opacity: 0;
   transform: translateY(10px);
 }
 
-body.intro-done .staged-hero > * {
+body.intro-done .staged-hero>* {
   animation: heroCascade 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* 1: Greeting, 2: Name, 3: "currently building", 4: Tagline, 5: sub, 6: impact, 7: buttons */
-body.intro-done .staged-hero > *:nth-child(1) { animation-delay: 0s; } /* Greeting + Name */
-body.intro-done .staged-hero > *:nth-child(2) { animation-delay: 0.05s; } /* Name */
-body.intro-done .staged-hero > *:nth-child(3) { animation-delay: 0.10s; } /* Tagline grouping */
-body.intro-done .staged-hero > *:nth-child(4) { animation-delay: 0.10s; } 
-body.intro-done .staged-hero > *:nth-child(5) { animation-delay: 0.15s; } 
-body.intro-done .staged-hero > *:nth-child(6) { animation-delay: 0.20s; }
-body.intro-done .staged-hero > *:nth-child(7) { animation-delay: 0.25s; } /* Buttons */
+body.intro-done .staged-hero>*:nth-child(1) {
+  animation-delay: 0s;
+}
+
+/* Greeting + Name */
+body.intro-done .staged-hero>*:nth-child(2) {
+  animation-delay: 0.05s;
+}
+
+/* Name */
+body.intro-done .staged-hero>*:nth-child(3) {
+  animation-delay: 0.10s;
+}
+
+/* Tagline grouping */
+body.intro-done .staged-hero>*:nth-child(4) {
+  animation-delay: 0.10s;
+}
+
+body.intro-done .staged-hero>*:nth-child(5) {
+  animation-delay: 0.15s;
+}
+
+body.intro-done .staged-hero>*:nth-child(6) {
+  animation-delay: 0.20s;
+}
+
+body.intro-done .staged-hero>*:nth-child(7) {
+  animation-delay: 0.25s;
+}
+
+/* Buttons */
 
 @keyframes heroCascade {
   to {
@@ -205,17 +230,32 @@ body.intro-done .staged-hero > *:nth-child(7) { animation-delay: 0.25s; } /* But
 }
 
 .hero-building {
-  color: var(--accent);
+  color: var(--text-secondary); /* Muted gray tone */
+  background: rgba(100, 255, 218, 0.03);
+  /* Soft background */
+  border: 1px solid transparent;
+  /* Layout maintained; visual border moved to box-shadow */
+  box-shadow:
+    0 0 0 1px rgba(100, 255, 218, 0.12),
+    0 0 12px rgba(100, 255, 218, 0.12);
+  /* Soft outer glow */
+  text-shadow: 0 0 6px rgba(100, 255, 218, 0.15);
+  /* Subtle text glow */
+  opacity: 0.8;
+  /* Slightly reduce opacity */
   font-size: 0.875rem;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
   margin-bottom: 24px;
-  padding: 6px 14px;
-  background: rgba(100, 255, 218, 0.08);
-  border: 1px solid rgba(100, 255, 218, 0.2);
-  border-radius: 6px;
+  padding: 4px 10px;
   display: inline-block;
-  text-shadow: 0 0 12px rgba(100, 255, 218, 0.2);
-  opacity: 0.85;
+  border-radius: 4px;
+  /* Maintain shape clean */
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.hero-building:hover {
+  border-color: rgba(100, 255, 218, 0.3);
+  /* Slight border brighten on hover */
 }
 
 .hero-tagline {

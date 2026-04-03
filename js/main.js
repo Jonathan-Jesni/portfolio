@@ -22,11 +22,11 @@ import { initCursorEffects, updateCursorEffects } from './cursorEffects.js';
   if (!loader || !greetingEl) return;
 
   const greetings = [
-    'initializing system', 
-    'loading modules', 
-    'allocating memory', 
-    'configuring network', 
-    'ai-core ready', 
+    'initializing system',
+    'loading modules',
+    'allocating memory',
+    'configuring network',
+    'ai-core ready',
     'system ready'
   ];
 
@@ -43,29 +43,29 @@ import { initCursorEffects, updateCursorEffects } from './cursorEffects.js';
       loader.classList.add('loader-done');
       document.body.classList.remove('loading');
       document.body.classList.add('intro-done');
-      
+
       setTimeout(() => loader.remove(), 600);
       return;
     }
 
     // Calc relative timing
     const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
-    
+
     // Calc absolute timing
     const now = new Date();
     const timeStr = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
 
     const span = document.createElement('span');
     span.className = 'boot-line';
-    
+
     const textFormat = `<span class="boot-time">[${timeStr} | ${elapsed}s]</span> ${greetings[i]}`;
-    
+
     if (i === greetings.length - 1) {
       span.innerHTML = `${textFormat}<span class="terminal-cursor">_</span>`;
     } else {
       span.innerHTML = textFormat;
     }
-    
+
     greetingEl.appendChild(span);
 
     // Final line hold vs standard line hold 
@@ -120,7 +120,7 @@ function updateActiveProject() {
       if (target) target.classList.add('active');
       lastActiveProject = projectId;
     }
-    
+
     if (closestBlock !== lastActiveImageBlock) {
       if (lastActiveImageBlock) lastActiveImageBlock.classList.remove('active');
       closestBlock.classList.add('active');
@@ -218,7 +218,7 @@ if (document.readyState === 'complete') {
     registerElements();
     lastLoopScrollY = -1;
   });
-  
+
   // CRITICAL: Re-calculate positions after all images load and claim layout space
   window.addEventListener('load', () => {
     updateCachedPositions();

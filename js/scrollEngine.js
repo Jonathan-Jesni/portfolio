@@ -33,18 +33,18 @@ export function registerElements() {
       el,
       type: 'up',
       offsetX: 0,
-      offsetY: 24,
+      offsetY: 28,
       isHero,
       isSkill: false,
       // Organic variation per element
-      parallaxMul: 0.9 + seed * 0.2,     // 0.9–1.1
+      parallaxMul: 0.95 + seed * 0.1,     // 0.95–1.05
       scaleMul: 0.97 + seed * 0.06,       // 0.97–1.03
-      delayOffset: seed * 0.04,            // 0–0.04
+      delayOffset: seed * 0.02,            // 0–0.02
       cachedTop: 0,
       cachedHeight: 0,
       // Lerp state for smooth interpolation
       sx: 0,
-      sy: 24,
+      sy: 28,
       ss: 0.96,
       so: 0,
       revealed: false,
@@ -58,16 +58,16 @@ export function registerElements() {
       el,
       type: 'skill',
       offsetX: -8,
-      offsetY: 4,
+      offsetY: 6,
       staggerIndex: i,
       isHero: false,
       isSkill: true,
-      parallaxMul: 0.85 + seed * 0.3,
+      parallaxMul: 0.95 + seed * 0.1,
       scaleMul: 0.97 + seed * 0.06,
-      delayOffset: seed * 0.03,
+      delayOffset: seed * 0.02,
       cachedTop: 0,
       cachedHeight: 0,
-      sx: -8, sy: 4, ss: 0.96, so: 0, revealed: false,
+      sx: -8, sy: 6, ss: 0.96, so: 0, revealed: false,
     });
   });
 
@@ -97,16 +97,16 @@ export function registerElements() {
       el,
       type: 'stagger',
       offsetX: 0,
-      offsetY: 30,
+      offsetY: 26,
       staggerIndex: i,
       isHero: false,
       isSkill: false,
-      parallaxMul: 0.9 + seed * 0.2,
+      parallaxMul: 0.95 + seed * 0.1,
       scaleMul: 0.97 + seed * 0.06,
-      delayOffset: seed * 0.03,
+      delayOffset: seed * 0.02,
       cachedTop: 0,
       cachedHeight: 0,
-      sx: 0, sy: 30, ss: 0.96, so: 0, revealed: false,
+      sx: 0, sy: 26, ss: 0.96, so: 0, revealed: false,
     });
   });
 
@@ -115,7 +115,7 @@ export function registerElements() {
   scrollElements.forEach(item => {
     // Add GPU acceleration class mapped in css/base.css
     item.el.classList.add('accelerate');
-    
+
     const rect = item.el.getBoundingClientRect();
     if (rect.top < viewportThreshold) {
       // Snap lerp state to fully visible
@@ -158,10 +158,10 @@ function getElementProgress(item, scrollY, viewportHeight) {
   const viewportCenter = scrollY + viewportHeight * 0.5;
 
   const distance = elementCenter - viewportCenter;
-  const range = viewportHeight * 0.65;
+  const range = viewportHeight * 0.7;
 
   if (distance > range) return 0;
-  if (distance < -range * 0.3) return 1;
+  if (distance < -range * 0.35) return 1;
 
   const raw = 1 - Math.max(0, distance / range);
   return easeOutQuart(Math.max(0, Math.min(1, raw)));
@@ -173,8 +173,8 @@ function getElementProgress(item, scrollY, viewportHeight) {
 function getIdleFloat(index, time) {
   // Each element gets a unique phase based on index
   const phase = index * 0.7;
-  const y = Math.sin(time * 0.8 + phase) * 0.7;  // ±0.7px (reduced ~12%)
-  const s = 1 + Math.sin(time * 0.6 + phase + 1.5) * 0.0017; // ±0.0017 scale (reduced ~15%)
+  const y = Math.sin(time * 0.8 + phase) * 0.4;  // Subtle < 0.5px float
+  const s = 1 + Math.sin(time * 0.6 + phase + 1.5) * 0.001;
   return { y, s };
 }
 
@@ -184,7 +184,7 @@ function getIdleFloat(index, time) {
 const mobileFactor = isMobile ? 0.5 : 1;
 
 export function applyScrollTransforms(scrollY, viewportHeight, time) {
-  const lerpFactor = 0.075;
+  const lerpFactor = 0.085;
   // Idle blend: ramp up floating when scroll stops
   const idleBlend = isScrolling ? 0 : Math.min(scrollIdleTimer * 0.3, 1);
 
@@ -231,7 +231,7 @@ export function applyScrollTransforms(scrollY, viewportHeight, time) {
     const blurRaw = 1 - progress;
     const blurCurve = Math.pow(blurRaw, 2.2);
 
-    // Idle float
+    // Subtle idle float
     let idleY = 0;
     let idleScale = 1;
     if (progress > 0.5) {
@@ -253,26 +253,29 @@ export function applyScrollTransforms(scrollY, viewportHeight, time) {
     if (Math.abs(targetScale - item.ss) < 0.0005) item.ss = targetScale;
     if (Math.abs(targetOpacity - item.so) < 0.005) item.so = targetOpacity;
 
+    // Lighter stabilization to avoid snapping (to 0.1px resolution)
+    const tx = Math.round(item.sx * 10) / 10;
+    
     if (item.isSkill) {
-      const parallaxY = item.sy + blurRaw * 10 * mobileFactor * item.parallaxMul;
-      const finalScale = item.ss * idleScale;
+      const ty = Math.round((item.sy + blurRaw * 10 * mobileFactor * item.parallaxMul) * 10) / 10;
+      const ts = item.ss.toFixed(3);
       const blurMul = isMobile ? 0 : 2.0;
       const blurAmount = blurCurve * blurMul;
 
       item.el.style.opacity = item.so.toFixed(2);
-      item.el.style.transform = `translate3d(${item.sx.toFixed(1)}px,${(parallaxY + idleY).toFixed(2)}px,0) scale(${finalScale.toFixed(2)})`;
+      item.el.style.transform = `translate3d(${tx}px, ${(ty + idleY).toFixed(2)}px, 0) scale(${ts})`;
       item.el.style.filter = blurAmount > 0.05 ? `blur(${blurAmount.toFixed(2)}px)` : 'none';
       return;
     }
 
     // Default — disable blur during scroll
+    const ty = Math.round(item.sy * 10) / 10;
+    const ts = item.ss.toFixed(3);
     const blurMul = (isMobile || isScrolling) ? 0 : 0.25;
     const blurAmount = blurCurve * blurMul;
-    const finalScale = item.ss * idleScale;
     const filterVal = blurAmount > 0.05 ? `blur(${blurAmount.toFixed(2)}px)` : 'none';
 
-    const scrollTransform =
-      `translate3d(${item.sx.toFixed(1)}px,${(item.sy + idleY).toFixed(2)}px,0) scale(${finalScale.toFixed(2)})`;
+    const scrollTransform = `translate3d(${tx}px, ${(ty + idleY).toFixed(2)}px, 0) scale(${ts})`;
 
     // Store scroll transform
     item.el.__scrollTransform = scrollTransform;
