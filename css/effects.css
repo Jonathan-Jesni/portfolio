@@ -165,8 +165,24 @@ body::after {
     --section-gap: 64px;
   }
 
+  .hero-content {
+    width: 100%;
+    max-width: 100vw;
+  }
+
   .hero-name {
+    font-size: clamp(2.2rem, 8vw, 3rem);
     letter-spacing: -1px;
+    word-break: break-word;
+  }
+
+  .hero-building {
+    white-space: normal;
+    word-break: break-word;
+    height: auto;
+    max-width: 100%;
+    display: block;
+    width: fit-content;
   }
 
   .hero-buttons {
@@ -175,6 +191,9 @@ body::after {
 
   .hero-buttons .btn {
     justify-content: center;
+    white-space: normal;
+    text-align: center;
+    height: auto;
   }
 
   .section-heading {
@@ -187,6 +206,16 @@ body::after {
 
   .image-block {
     min-height: auto;
+  }
+  .hero-scroll-indicator {
+    display: none;
+  }
+
+  .pipeline-flow {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 10px;
+    text-align: center;
   }
 
   .skills-grid {

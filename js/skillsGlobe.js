@@ -392,7 +392,7 @@
         var baseIconSize = 22;
 
         var isOfficialIcon = [
-          "Python", "Java", "C / C++", "TensorFlow", "PyTorch",
+          "Python", "Java", "C++", "TensorFlow", "PyTorch",
           "OpenCV", "NumPy", "Pandas", "Docker"
         ].includes(node.skill.name);
 
