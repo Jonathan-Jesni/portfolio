@@ -462,108 +462,13 @@
       </div>
     </div> <!-- End System View -->
 
-    <!-- VISUAL VIEW (Network Nodes) -->
+    <!-- VISUAL VIEW (Skills Globe) -->
     <div class="skills-view visual-view" id="view-visual">
-      <div class="skills-network-wrapper">
-        <div class="skills-network">
-          <!-- Background SVG Connections -->
-          <svg class="network-lines" width="100%" height="100%">
-            <!-- Group 1: Core Hub to Satellites -->
-            <line class="line-core" x1="20%" y1="25%" x2="12%" y2="15%"></line>
-            <line class="line-core" x1="20%" y1="25%" x2="28%" y2="15%"></line>
-            <line class="line-core" x1="20%" y1="25%" x2="12%" y2="35%"></line>
-            <line class="line-core" x1="20%" y1="25%" x2="25%" y2="40%"></line>
-            <line class="line-core" x1="20%" y1="25%" x2="16%" y2="48%"></line>
-
-            <!-- Group 2: Tools Hub to Satellites -->
-            <line class="line-tools" x1="80%" y1="25%" x2="88%" y2="15%"></line>
-            <line class="line-tools" x1="80%" y1="25%" x2="72%" y2="15%"></line>
-            <line class="line-tools" x1="80%" y1="25%" x2="88%" y2="35%"></line>
-            <line class="line-tools" x1="80%" y1="25%" x2="75%" y2="40%"></line>
-
-            <!-- Group 3: AI Hub to Satellites -->
-            <line class="line-ai" x1="50%" y1="50%" x2="40%" y2="40%"></line>
-            <line class="line-ai" x1="50%" y1="50%" x2="60%" y2="40%"></line>
-            <line class="line-ai" x1="50%" y1="50%" x2="38%" y2="60%"></line>
-            <line class="line-ai" x1="50%" y1="50%" x2="62%" y2="60%"></line>
-
-            <!-- Group 4: Cyber Hub to Satellites -->
-            <line class="line-cyber" x1="20%" y1="75%" x2="12%" y2="85%"></line>
-            <line class="line-cyber" x1="20%" y1="75%" x2="28%" y2="85%"></line>
-            <line class="line-cyber" x1="20%" y1="75%" x2="12%" y2="65%"></line>
-            <line class="line-cyber" x1="20%" y1="75%" x2="25%" y2="60%"></line>
-
-            <!-- Group 5: Systems Hub to Satellites -->
-            <line class="line-sys" x1="80%" y1="75%" x2="88%" y2="85%"></line>
-            <line class="line-sys" x1="80%" y1="75%" x2="72%" y2="85%"></line>
-            <line class="line-sys" x1="80%" y1="75%" x2="88%" y2="65%"></line>
-            <line class="line-sys" x1="80%" y1="75%" x2="75%" y2="60%"></line>
-
-            <!-- Group 6: Graphics Hub to Satellites -->
-            <line class="line-gfx" x1="50%" y1="85%" x2="40%" y2="78%"></line>
-            <line class="line-gfx" x1="50%" y1="85%" x2="60%" y2="78%"></line>
-            <line class="line-gfx" x1="50%" y1="85%" x2="42%" y2="95%"></line>
-            <line class="line-gfx" x1="50%" y1="85%" x2="58%" y2="95%"></line>
-
-            <!-- Inter-Hub Main Lines -->
-            <line class="line-main line-core" x1="20%" y1="25%" x2="50%" y2="50%"></line>
-            <line class="line-main line-tools" x1="80%" y1="25%" x2="50%" y2="50%"></line>
-            <line class="line-main line-cyber" x1="20%" y1="75%" x2="50%" y2="50%"></line>
-            <line class="line-main line-sys" x1="80%" y1="75%" x2="50%" y2="50%"></line>
-            <line class="line-main line-gfx" x1="50%" y1="85%" x2="50%" y2="50%"></line>
-          </svg>
-
-          <!-- AI/ML Cluster (Center) -->
-          <div class="skill-node hub" style="top: 50%; left: 50%;" data-group="ai" data-desc="end-to-end ML pipelines including preprocessing, training, and evaluation">Machine Learning</div>
-          <div class="skill-node" style="top: 40%; left: 40%;" data-group="ai" data-desc="neural network architectures for high-dimensional data">Deep Learning</div>
-          <div class="skill-node" style="top: 40%; left: 60%;" data-group="ai" data-desc="extracting insights from images and video using ML">Computer Vision</div>
-          <div class="skill-node" style="top: 60%; left: 38%;" data-group="ai" data-desc="real-time object detection optimized for speed">YOLO</div>
-          <div class="skill-node" style="top: 60%; left: 62%;" data-group="ai" data-desc="building systems that suggest relevant content">Recommenders</div>
-
-          <!-- CORE/Lang Cluster (Top Left) -->
-          <div class="skill-node hub" style="top: 25%; left: 20%;" data-group="core" data-desc="used for backend systems, automation, and ML">Python</div>
-          <div class="skill-node" style="top: 15%; left: 12%;" data-group="core" data-desc="object-oriented programming for scalable logic">Java</div>
-          <div class="skill-node" style="top: 15%; left: 28%;" data-group="core" data-desc="low-level programming for performance tasks">C/C++</div>
-          <div class="skill-node" style="top: 35%; left: 12%;" data-group="core" data-desc="lightweight framework for building APIs">Flask</div>
-          <div class="skill-node" style="top: 40%; left: 25%;" data-group="core" data-desc="used for UI and frontend architecture">Dart</div>
-          <div class="skill-node" style="top: 48%; left: 16%;" data-group="core" data-desc="cross-platform app framework">Flutter</div>
-
-          <!-- LOADED/Tools Cluster (Top Right) -->
-          <div class="skill-node hub" style="top: 25%; left: 80%;" data-group="tools" data-desc="production-ready ML framework">TensorFlow</div>
-          <div class="skill-node" style="top: 15%; left: 88%;" data-group="tools" data-desc="deep learning for research and training">PyTorch</div>
-          <div class="skill-node" style="top: 15%; left: 72%;" data-group="tools" data-desc="computer vision and array manipulation">OpenCV</div>
-          <div class="skill-node" style="top: 35%; left: 88%;" data-group="tools" data-desc="numerical computing and math">NumPy</div>
-          <div class="skill-node" style="top: 40%; left: 75%;" data-group="tools" data-desc="dataset manipulation and preprocessing">Pandas</div>
-
-          <!-- SECURE Cluster (Bottom Left) -->
-          <div class="skill-node hub" style="top: 75%; left: 20%;" data-group="cyber" data-desc="finding vulnerabilities in security architectures">PenTesting</div>
-          <div class="skill-node" style="top: 85%; left: 12%;" data-group="cyber" data-desc="secure data encryption algorithms">Cryptography</div>
-          <div class="skill-node" style="top: 85%; left: 28%;" data-group="cyber" data-desc="defending and securing local and web protocols">NetSec</div>
-          <div class="skill-node" style="top: 65%; left: 12%;" data-group="cyber" data-desc="digital investigation pipelines">Forensics</div>
-          <div class="skill-node" style="top: 60%; left: 25%;" data-group="cyber" data-desc="analyzing and reverse engineering exploits">Malware</div>
-
-          <!-- ONLINE/Systems Cluster (Bottom Right) -->
-          <div class="skill-node hub" style="top: 75%; left: 80%;" data-group="sys" data-desc="containerizing applications and workflows">Docker</div>
-          <div class="skill-node" style="top: 85%; left: 88%;" data-group="sys" data-desc="managing distributed micro-level clusters">Kubernetes</div>
-          <div class="skill-node" style="top: 85%; left: 72%;" data-group="sys" data-desc="automated building and deployment pipelines">CI/CD</div>
-          <div class="skill-node" style="top: 65%; left: 88%;" data-group="sys" data-desc="optimizing compute workloads across networks">Distributed</div>
-          <div class="skill-node" style="top: 60%; left: 75%;" data-group="sys" data-desc="cloud deployment and VPC topologies">AWS</div>
-
-          <!-- RENDER Cluster (Bottom Center) -->
-          <div class="skill-node hub" style="top: 85%; left: 50%;" data-group="gfx" data-desc="custom memory shaders and physical pipelines">Shader</div>
-          <div class="skill-node" style="top: 78%; left: 40%;" data-group="gfx" data-desc="GPU accelerated graphics loop">OpenGL</div>
-          <div class="skill-node" style="top: 78%; left: 60%;" data-group="gfx" data-desc="rendering engine mechanics on web architecture">WebGL</div>
-          <div class="skill-node" style="top: 95%; left: 42%;" data-group="gfx" data-desc="low-overhead cross-platform 3D API">Vulkan</div>
-          <div class="skill-node" style="top: 95%; left: 58%;" data-group="gfx" data-desc="photorealistic physical lighting simulations">RayTracing</div>
-        </div>
+      <div class="skills-globe">
+        <canvas id="skills-globe-canvas"></canvas>
+        <div id="globe-tooltip" class="globe-tooltip"></div>
       </div>
     </div> <!-- End Visual View -->
-    
-    <!-- Shared Tooltip container for hover states -->
-    <div id="visual-tooltip" class="visual-tooltip">
-      <div class="tooltip-title"></div>
-      <div class="tooltip-desc"></div>
-    </div>
     
     </div> <!-- End skills-container -->
   </div> <!-- End container -->
@@ -702,6 +607,7 @@
 
   <script type="module" src="js/main.js"></script>
   <script nomodule src="script_backup.js"></script>
+  <script src="js/skillsGlobe.js"></script>
 </body>
 
 </html>
