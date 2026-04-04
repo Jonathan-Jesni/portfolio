@@ -151,6 +151,15 @@ export function updateCachedPositions() {
 }
 
 // ============================================
+// FULLY RESYNC SCROLL ENGINE (Safe Layout Recalc)
+// ============================================
+export function resyncScrollEngine() {
+  // Only update bounding boxes; do NOT force resets
+  // This keeps the continuous lerp system stable
+  updateCachedPositions();
+}
+
+// ============================================
 // SCROLL PROGRESS — viewport-center-distance
 // ============================================
 function getElementProgress(item, scrollY, viewportHeight) {

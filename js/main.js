@@ -10,6 +10,7 @@ import {
   applyDepthLayers,
   updateProgressBar,
   smoothVelocity,
+  resyncScrollEngine,
 } from './scrollEngine.js';
 import { initCursorEffects, updateCursorEffects } from './cursorEffects.js';
 
@@ -383,6 +384,9 @@ document.querySelectorAll('.skill-category').forEach(category => {
       if (!isExpanded) {
         item.classList.add('expanded');
       }
+      
+      // Recalculate layout heights and fully reset child animations after CSS slide-down
+      setTimeout(resyncScrollEngine, 300);
     });
   });
 });
@@ -408,6 +412,11 @@ toggleBtns.forEach(btn => {
       visualView.classList.remove('active');
       systemView.classList.add('active');
     }
+    
+    // Force full scroll engine resync after display toggle settles completely
+    requestAnimationFrame(() => {
+      setTimeout(resyncScrollEngine, 20);
+    });
   });
 });
 
