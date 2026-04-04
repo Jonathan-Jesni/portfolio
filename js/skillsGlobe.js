@@ -97,12 +97,13 @@
 
   function initSkillsGlobe() {
     const canvas = document.getElementById('skills-globe-canvas');
-    if (!canvas || !canvas.getContext) return;
-
+    if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
     const tooltip = document.getElementById('globe-tooltip');
+
+    // Canvas for tinting
+    const pCanvas = document.createElement("canvas");
+    const pCtx = pCanvas.getContext("2d");
 
     // ---- Globe Parameters ----
     const perspective = 550;
@@ -130,9 +131,9 @@
       const theta = goldenAngle * i;
 
       nodes.push({
-        x: Math.cos(theta) * radiusAtY * radius,
-        y: y * radius,
-        z: Math.sin(theta) * radiusAtY * radius,
+        x: Math.cos(theta) * radiusAtY * radius + (Math.random() - 0.5) * 3,
+        y: y * radius + (Math.random() - 0.5) * 3,
+        z: Math.sin(theta) * radiusAtY * radius + (Math.random() - 0.5) * 3,
         rx: 0, ry: 0, rz: 0,
         projX: 0,
         projY: 0,
@@ -173,7 +174,7 @@
 
     // ---- Project ----
     function project(node, centerX, centerY) {
-      var scale = perspective / (perspective + node.rz);
+      var scale = perspective / (perspective + node.rz * 1.2);
       scale = Math.min(scale, 1.1);
       node.projX = centerX + node.rx * scale;
       node.projY = centerY + node.ry * scale;
@@ -281,11 +282,10 @@
 
       // ---- Rotation ----
       if (!isDragging) {
-        rotY += 0.002;
         dragVelX *= 0.95;
         dragVelY *= 0.95;
-        rotX += dragVelX;
-        rotY += dragVelY;
+        rotX += dragVelX + 0.0015;
+        rotY += dragVelY + 0.002 + Math.sin(rotX) * 0.0005;
       }
 
       // ---- Transform nodes ----
@@ -296,6 +296,7 @@
         node.rx = r2.x;
         node.ry = r2.y;
         node.rz = r2.z;
+        node.rz += Math.sin(rotY + i) * 0.5;
         project(node, centerX, centerY);
       }
 
@@ -390,6 +391,11 @@
         var icon = loadedIcons[node.skill.name];
         var baseIconSize = 22;
 
+        var isOfficialIcon = [
+          "Python", "Java", "C / C++", "TensorFlow", "PyTorch",
+          "OpenCV", "NumPy", "Pandas", "Docker"
+        ].includes(node.skill.name);
+
         if (icon && icon.complete && icon.naturalWidth > 0) {
           // Icon rendering
           var rawSize = baseIconSize * node.projScale;
@@ -405,15 +411,46 @@
             iconSize *= 1.3;
           }
 
-          // Icons are drawn natively (no tinting)
-          ctx.globalAlpha = 1;
-          ctx.drawImage(
-            icon,
-            drawX - iconSize / 2,
-            drawY - iconSize / 2,
-            iconSize,
-            iconSize
-          );
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = "high";
+
+          if (node.skill.name === "Java") {
+            ctx.globalAlpha = 1;
+          } else {
+            ctx.globalAlpha = 1; // Native icons maintain base 1
+          }
+
+          if (!isOfficialIcon) {
+            // Tint non-official icons offscreen to prevent background bleed
+            pCanvas.width = iconSize;
+            pCanvas.height = iconSize;
+            pCtx.clearRect(0, 0, iconSize, iconSize);
+            
+            pCtx.drawImage(icon, 0, 0, iconSize, iconSize);
+            
+            pCtx.globalCompositeOperation = "source-in";
+            pCtx.fillStyle = `rgba(${col.r}, ${col.g}, ${col.b}, 1)`;
+            pCtx.fillRect(0, 0, iconSize, iconSize);
+            
+            pCtx.globalCompositeOperation = "source-over"; // Reset
+
+            ctx.drawImage(
+              pCanvas,
+              drawX - iconSize / 2,
+              drawY - iconSize / 2,
+              iconSize,
+              iconSize
+            );
+          } else {
+            // Draw natively
+            ctx.drawImage(
+              icon,
+              drawX - iconSize / 2,
+              drawY - iconSize / 2,
+              iconSize,
+              iconSize
+            );
+          }
         } else {
           // Fallback: draw circle
           var baseSize = 5;

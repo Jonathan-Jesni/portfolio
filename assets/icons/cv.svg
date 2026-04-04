@@ -1,1 +1,16 @@
-<svg fill="#cccccc" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" fill="none" stroke="#cccccc" stroke-width="1.5"/><circle cx="12" cy="12" r="5" fill="none" stroke="#cccccc" stroke-width="1.2"/><circle cx="12" cy="12" r="2"/><line x1="12" y1="1" x2="12" y2="3" stroke="#cccccc" stroke-width="1.2"/><line x1="12" y1="21" x2="12" y2="23" stroke="#cccccc" stroke-width="1.2"/><line x1="1" y1="12" x2="3" y2="12" stroke="#cccccc" stroke-width="1.2"/><line x1="21" y1="12" x2="23" y2="12" stroke="#cccccc" stroke-width="1.2"/></svg>
+<!-- @license lucide-static v1.7.0 - ISC -->
+<svg
+  class="lucide lucide-eye"
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
+  <circle cx="12" cy="12" r="3" />
+</svg>
