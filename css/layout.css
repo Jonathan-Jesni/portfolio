@@ -227,7 +227,8 @@ body.intro-done .staged-hero>*:nth-child(7) {
 }
 
 .hero-building {
-  color: var(--text-secondary); /* Muted gray tone */
+  color: var(--text-secondary);
+  /* Muted gray tone */
   background: rgba(100, 255, 218, 0.03);
   /* Soft background */
   border: 1px solid transparent;
@@ -293,7 +294,7 @@ body.intro-done .staged-hero>*:nth-child(7) {
 
 .hero-scroll-indicator {
   position: absolute;
-  bottom: 40px;
+  bottom: clamp(16px, 4vh, 40px);
   left: 50%;
   transform: translateX(-50%);
   display: flex;
