@@ -283,13 +283,25 @@
 }
 
 .skills-view {
-  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.5s, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(10px) scale(0.98);
 }
 
 .skills-view.active {
-  display: block;
+  position: relative;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  z-index: 2;
   padding-top: 0;
+  transform: translateY(0) scale(1);
 }
 
 .skills-grid {
@@ -302,7 +314,7 @@
 .skills-globe {
   position: relative;
   width: 100%;
-  height: clamp(500px, 65vh, 700px);
+  height: clamp(500px, 55vh, 600px);
   display: flex;
   align-items: center;
   justify-content: center;

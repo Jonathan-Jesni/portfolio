@@ -119,6 +119,9 @@
     let mouseX = -9999;
     let mouseY = -9999;
     let animId = null;
+    let renderProgress = 0;
+    let viewTransition = 0;
+    let wasModeActive = false;
 
     // ---- Fibonacci Sphere Distribution ----
     const nodes = [];
@@ -269,22 +272,45 @@
         animId = requestAnimationFrame(render);
         return;
       }
-      
+
       // Recover from display:none
       if (canvas.width === 0) {
         resizeCanvas();
       }
 
       var centerX = w / 2;
-      var centerY = h / 2;
+      var centerY = h / 2 - 16;
+      // ---- Scroll Reveal & Transition ----
+      var domRect = canvas.getBoundingClientRect();
+      var inView = domRect.top < window.innerHeight * 0.85;
+      var targetProgress = inView ? 1 : 0;
+      renderProgress += (targetProgress - renderProgress) * 0.06; // easing
+
+      // ---- View Mode Transition ----
+      var visualView = document.getElementById('view-visual');
+      var isModeActive = visualView && visualView.classList.contains('active');
+
+      if (isModeActive && !wasModeActive) {
+        viewTransition = 0; // Force reset to re-trigger scale/fade in
+      }
+      wasModeActive = isModeActive;
+
+      var viewTransitionTarget = isModeActive ? 1 : 0;
+      viewTransition += (viewTransitionTarget - viewTransition) * 0.08; // easing
+
+      var combinedAlpha = renderProgress * viewTransition;
 
       // Container-based scale fix:
       var containerWidth = canvas.parentElement.clientWidth;
-      var safeWidth = containerWidth - 80; 
+      var safeWidth = containerWidth - 80;
       var safeRadius = safeWidth / 2;
       var maxScale = window.innerWidth <= 768 ? 0.92 : 1;
-      var globeScale = Math.min(maxScale, safeRadius / radius);
 
+      var baseGlobeScale = Math.min(maxScale, safeRadius / radius);
+      var introScale = 0.92 + combinedAlpha * 0.08;
+      var globeScale = baseGlobeScale * introScale;
+
+      ctx.globalAlpha = combinedAlpha;
       ctx.clearRect(0, 0, w, h);
 
       // ---- Rotation ----
@@ -296,17 +322,39 @@
       }
 
       // ---- Transform nodes ----
+      var t = performance.now() * 0.001;
       for (var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
-        var sx = node.x * globeScale;
-        var sy = node.y * globeScale;
-        var sz = node.z * globeScale;
+
+        // Apply subtle independent drift using seeded phases per axis
+        var seedX = i * 1.34;
+        var seedY = i * 2.71;
+        var seedZ = i * 0.89;
+
+        var ampX = 4;
+        var ampY = 3.5;
+        var ampZ = 4.5;
+
+        if (node.skill.name === "Python" || node.skill.name === "Vulkan") {
+          ampX = 9.0;
+          ampY = 1.0;
+          ampZ = 8.0;
+        }
+
+        var driftX = Math.sin(t * 0.4 + seedX) * ampX;
+        var driftY = Math.cos(t * 0.3 + seedY) * ampY;
+        var driftZ = Math.sin(t * 0.5 + seedZ) * ampZ;
+
+        var sx = (node.x + driftX) * globeScale;
+        var sy = (node.y + driftY) * globeScale;
+        var sz = (node.z + driftZ) * globeScale;
+
         var r1 = rotateY(sx, sy, sz, rotY);
         var r2 = rotateX(r1.x, r1.y, r1.z, rotX);
         node.rx = r2.x;
         node.ry = r2.y;
         node.rz = r2.z;
-        node.rz += Math.sin(rotY + i) * 0.5;
+
         project(node, centerX, centerY);
       }
 
@@ -342,11 +390,12 @@
           if (sorted[i].skill.group === sorted[j].skill.group) {
             var alphaMin = Math.min(sorted[i].projScale, sorted[j].projScale);
             var depthAlpha = ((alphaMin - 0.5) / 0.5) * 0.15;
-            if (depthAlpha > 0.03) {
+            if (depthAlpha > 0.02) {
               var col = groupColors[sorted[i].skill.group] || accentColor;
-              ctx.strokeStyle = 'rgba(' + col.r + ',' + col.g + ',' + col.b + ',' + Math.min(0.35, depthAlpha * 1.2).toFixed(3) + ')';
+              var lineAlpha = Math.min(0.65, depthAlpha * 1.8).toFixed(3);
+              ctx.strokeStyle = 'rgba(' + col.r + ',' + col.g + ',' + col.b + ',' + lineAlpha + ')';
               ctx.beginPath();
-              
+
               var margin = 12;
               var drawXi = Math.max(margin, Math.min(w - margin, sorted[i].projX));
               var drawYi = Math.max(margin, Math.min(h - margin, sorted[i].projY));
@@ -374,7 +423,7 @@
       // ---- Draw nodes (icons) ----
       for (var i = 0; i < sorted.length; i++) {
         var node = sorted[i];
-        
+
         var margin = 12;
         var drawX = Math.max(margin, Math.min(w - margin, node.projX));
         var drawY = Math.max(margin, Math.min(h - margin, node.projY));
@@ -426,9 +475,9 @@
           ctx.imageSmoothingQuality = "high";
 
           if (node.skill.name === "Java") {
-            ctx.globalAlpha = 1;
+            ctx.globalAlpha = combinedAlpha;
           } else {
-            ctx.globalAlpha = 1; // Native icons maintain base 1
+            ctx.globalAlpha = combinedAlpha; // Native icons maintain base 1
           }
 
           if (!isOfficialIcon) {
@@ -436,13 +485,13 @@
             pCanvas.width = iconSize;
             pCanvas.height = iconSize;
             pCtx.clearRect(0, 0, iconSize, iconSize);
-            
+
             pCtx.drawImage(icon, 0, 0, iconSize, iconSize);
-            
+
             pCtx.globalCompositeOperation = "source-in";
             pCtx.fillStyle = `rgba(${col.r}, ${col.g}, ${col.b}, 1)`;
             pCtx.fillRect(0, 0, iconSize, iconSize);
-            
+
             pCtx.globalCompositeOperation = "source-over"; // Reset
 
             ctx.drawImage(
