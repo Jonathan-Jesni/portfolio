@@ -278,6 +278,13 @@
       var centerX = w / 2;
       var centerY = h / 2;
 
+      // Container-based scale fix:
+      var containerWidth = canvas.parentElement.clientWidth;
+      var safeWidth = containerWidth - 80; 
+      var safeRadius = safeWidth / 2;
+      var maxScale = window.innerWidth <= 768 ? 0.92 : 1;
+      var globeScale = Math.min(maxScale, safeRadius / radius);
+
       ctx.clearRect(0, 0, w, h);
 
       // ---- Rotation ----
@@ -291,7 +298,10 @@
       // ---- Transform nodes ----
       for (var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
-        var r1 = rotateY(node.x, node.y, node.z, rotY);
+        var sx = node.x * globeScale;
+        var sy = node.y * globeScale;
+        var sz = node.z * globeScale;
+        var r1 = rotateY(sx, sy, sz, rotY);
         var r2 = rotateX(r1.x, r1.y, r1.z, rotX);
         node.rx = r2.x;
         node.ry = r2.y;
@@ -323,7 +333,7 @@
       }
 
       // ---- Draw subtle sphere wireframe ----
-      drawGlobeOutline(centerX, centerY);
+      drawGlobeOutline(centerX, centerY, radius * globeScale);
 
       // ---- Draw connections ----
       ctx.lineWidth = 1;
@@ -352,12 +362,13 @@
       }
 
       // ---- Add Center Glow ----
-      var gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
+      var currentGlowRadius = radius * globeScale;
+      var gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, currentGlowRadius);
       gradient.addColorStop(0, 'rgba(100,255,218,0.09)');
       gradient.addColorStop(1, 'rgba(0,0,0,0)');
       ctx.fillStyle = gradient;
       ctx.beginPath();
-      ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+      ctx.arc(centerX, centerY, currentGlowRadius, 0, Math.PI * 2);
       ctx.fill();
 
       // ---- Draw nodes (icons) ----
@@ -508,12 +519,12 @@
     }
 
     // ---- Subtle equator / meridian ----
-    function drawGlobeOutline(cx, cy) {
+    function drawGlobeOutline(cx, cy, currentRadius) {
       ctx.strokeStyle = 'rgba(100, 255, 218, 0.08)';
       ctx.lineWidth = 1;
 
       var eqScale = perspective / perspective; // z=0, scale = 1
-      var eqRadius = radius * eqScale;
+      var eqRadius = currentRadius * eqScale;
       ctx.beginPath();
       ctx.ellipse(cx, cy, eqRadius, eqRadius * 0.3, 0, 0, Math.PI * 2);
       ctx.stroke();
