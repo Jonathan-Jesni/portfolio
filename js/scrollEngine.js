@@ -33,18 +33,18 @@ export function registerElements() {
       el,
       type: 'up',
       offsetX: 6,
-      offsetY: 22,
+      offsetY: isMobile ? 12 : 22,
       isHero,
       isSkill: false,
       // Organic variation per element
-      parallaxMul: 0.98 + seed * 0.04,
+      parallaxMul: isMobile ? 1 : 0.98 + seed * 0.04,
       scaleMul: 1,
-      delayOffset: seed * 0.02,
+      delayOffset: seed * (isMobile ? 0.01 : 0.02),
       cachedTop: 0,
       cachedHeight: 0,
       // Lerp state for smooth interpolation
       sx: 6,
-      sy: 22,
+      sy: isMobile ? 12 : 22,
       ss: 0.985,
       so: 0,
       revealed: false,
@@ -58,16 +58,16 @@ export function registerElements() {
       el,
       type: 'skill',
       offsetX: 6,
-      offsetY: 4,
+      offsetY: isMobile ? 2 : 4,
       staggerIndex: i,
       isHero: false,
       isSkill: true,
-      parallaxMul: 0.98 + seed * 0.04,
+      parallaxMul: isMobile ? 1 : 0.98 + seed * 0.04,
       scaleMul: 1,
-      delayOffset: seed * 0.02,
+      delayOffset: seed * (isMobile ? 0.01 : 0.02),
       cachedTop: 0,
       cachedHeight: 0,
-      sx: 6, sy: 4, ss: 0.985, so: 0, revealed: false,
+      sx: 6, sy: isMobile ? 2 : 4, ss: 0.985, so: 0, revealed: false,
     });
   });
 
@@ -83,7 +83,7 @@ export function registerElements() {
       isSkill: true,
       parallaxMul: 1,
       scaleMul: 1,
-      delayOffset: (i % 6) * 0.045,
+      delayOffset: (i % 6) * (isMobile ? 0.02 : 0.045),
       cachedTop: 0,
       cachedHeight: 0,
       sx: 6, sy: 0, ss: 1, so: 0, revealed: false,
@@ -97,16 +97,16 @@ export function registerElements() {
       el,
       type: 'stagger',
       offsetX: 0,
-      offsetY: 24,
+      offsetY: isMobile ? 12 : 24,
       staggerIndex: i,
       isHero: false,
       isSkill: false,
-      parallaxMul: 0.98 + seed * 0.04,
+      parallaxMul: isMobile ? 1 : 0.98 + seed * 0.04,
       scaleMul: 1,
-      delayOffset: seed * 0.02,
+      delayOffset: seed * (isMobile ? 0.01 : 0.02),
       cachedTop: 0,
       cachedHeight: 0,
-      sx: 0, sy: 24, ss: 0.985, so: 0, revealed: false,
+      sx: 0, sy: isMobile ? 12 : 24, ss: 0.985, so: 0, revealed: false,
     });
   });
 
@@ -167,7 +167,7 @@ function getElementProgress(item, scrollY, viewportHeight) {
   const viewportCenter = scrollY + viewportHeight * 0.5;
 
   const distance = elementCenter - viewportCenter;
-  const range = viewportHeight * 0.7;
+  const range = viewportHeight * (isMobile ? 0.85 : 0.7);
 
   if (distance > range) return 0;
   if (distance < -range * 0.35) return 1;
@@ -193,7 +193,7 @@ function getIdleFloat(index, time) {
 const mobileFactor = isMobile ? 0.5 : 1;
 
 export function applyScrollTransforms(scrollY, viewportHeight, time) {
-  const lerpFactor = 0.09;
+  const lerpFactor = isMobile ? 0.14 : 0.09;
   // Idle blend: ramp up floating when scroll stops
   const idleBlend = isScrolling ? 0 : Math.min(scrollIdleTimer * 0.3, 1);
 
@@ -218,7 +218,7 @@ export function applyScrollTransforms(scrollY, viewportHeight, time) {
 
     // Stagger for grouped cards
     if ((item.type === 'stagger' || item.type === 'skill') && item.staggerIndex > 0) {
-      const staggerDelay = item.staggerIndex * 0.07;
+      const staggerDelay = item.staggerIndex * (isMobile ? 0.045 : 0.07);
       progress = Math.max(0, Math.min(1, (progress - staggerDelay) / (1 - staggerDelay)));
       progress = easeOutCubic(progress);
     }
@@ -231,7 +231,7 @@ export function applyScrollTransforms(scrollY, viewportHeight, time) {
     const targetScale = baseScale * item.scaleMul;
 
     // Softer slide easing: (1-progress)^1.6 — smoother deceleration, less abrupt
-    const slideEase = Math.pow(1 - progress, 1.6);
+    const slideEase = Math.pow(1 - progress, isMobile ? 1.1 : 1.6);
     // No velocityBoost on translation — eliminates scroll-spike jitter
     const targetX = item.offsetX * slideEase * mobileFactor * item.parallaxMul;
     const targetY = item.offsetY * (1 - progress) * mobileFactor * item.parallaxMul;
