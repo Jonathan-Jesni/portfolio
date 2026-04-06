@@ -1,93 +1,47 @@
 # 🚀 Portfolio — Jonathan Jesni
 
-A high-performance, **modular developer portfolio** showcasing real-world systems across AI, cybersecurity, and scalable software. Built with a focus on **clean architecture, smooth interaction design, and zero-framework performance**.
+A high-performance, modular developer portfolio focused on **AI-powered systems, cybersecurity, and scalable software**.
 
-![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen)
+Built with **clean architecture, custom animation systems, and zero-framework performance**.
+
 ![Tech](https://img.shields.io/badge/Tech-Vanilla_JS-yellow)
 ![Architecture](https://img.shields.io/badge/Architecture-Modular-blue)
-![Status](https://img.shields.io/badge/Status-Yet%20to%20Deploy-orange)
+![Performance](https://img.shields.io/badge/Performance-Optimized-brightgreen)
+![Status](https://img.shields.io/badge/Status-Live-success)
 
 ---
 
 ## 🌐 Live Demo
 
-> 🚧 **Yet to be deployed** — final production setup in progress.
+👉 **[https://jonathanjesni.com](https://jonathanjesni.com)**
 
 ---
 
-## 💻 Featured Projects
+## ⚙️ Highlights
 
-### 🧠 Ludex — Hybrid Recommendation System
-
-A production-style recommendation engine combining content understanding with user behavior modeling.
-
-* **Architecture:** TF-IDF + ALS collaborative filtering
-* **Enhancements:** Anchor-based profiling + MMR re-ranking
-* **Focus:** Solving cold-start and personalization challenges
-
----
-
-### 📄 File Converter — Document Processing Engine
-
-A deterministic, explainable document conversion system.
-
-* **Architecture:** Two-pass pipeline (Parse → Structure → Render)
-* **Capabilities:** Paragraph reconstruction, list detection, heading inference
-* **Philosophy:** Fully deterministic, no ML/OCR
+- ⚡ **Zero-framework architecture** — pure HTML, CSS, JavaScript  
+- 🧩 **Modular codebase** — clean separation of concerns  
+- 🎯 **Custom scroll-synced animation engine** (single rAF loop)  
+- 📱 **Mobile-optimized animation tuning** (reduced lag, tighter timing)  
+- 🎨 **High-performance UI/UX** with layered motion design  
+- 🧠 **System-focused engineering** — not template-based  
 
 ---
 
-### 🔐 WebGuardian — Phishing Detection System
+## 🧠 Architecture Overview
 
-A multimodal cybersecurity system deployed as a Chrome extension.
+- Single `requestAnimationFrame` loop orchestrating all animations  
+- Scroll-driven transform engine with viewport-based interpolation  
+- Unified transform pipeline (scroll + depth + interaction)  
+- Mobile-specific tuning (faster response, reduced floatiness)  
+- GPU-accelerated rendering using `translate3d`  
 
-* **Model:** Char-CNN + LSTM + MobileNetV2
-* **Accuracy:** 98.73% on real-world data
-* **Latency:** ~35ms real-time inference
+### Core Modules
 
----
-
-### 🎯 Synthetic Data Object Detection
-
-An end-to-end pipeline using fully synthetic data.
-
-* **Data:** Procedural 3D scenes (Blender)
-* **Model:** YOLOv8 Nano
-* **Results:** 0.997 precision, 1.000 recall
-
----
-
-## 🛠️ Tech Stack
-
-| Category      | Tools                           |
-| ------------- | ------------------------------- |
-| **Languages** | Python, Java, C/C++, Dart       |
-| **AI/ML**     | PyTorch, TensorFlow, OpenCV     |
-| **Systems**   | Data Pipelines, System Design   |
-| **Frontend**  | HTML5, CSS3, Vanilla JavaScript |
-| **Graphics**  | Blender (bpy)                   |
-| **DevOps**    | Git, Vercel (ready)             |
-
----
-
-## ⚙️ Key Highlights
-
-* ⚡ **Zero-framework architecture** — fast and lightweight
-* 🧩 **Modular codebase** — clean separation of concerns
-* 🎯 **Scroll-synced animation engine** with single rAF loop
-* 🧠 **Real-world ML systems** (not toy projects)
-* 🎨 **Polished UI/UX** with smooth, layered motion
-* 🚀 **GPU-optimized rendering pipeline**
-
----
-
-## 🧠 Animation Architecture
-
-* **Single requestAnimationFrame loop**
-* **Scroll-based transform engine**
-* **Unified transform pipeline (scroll + tilt)**
-* **Cursor effects & micro-interactions (desktop only)**
-* **GPU-accelerated transforms (translate3d)**
+- `scrollEngine.js` — animation core  
+- `cursorEffects.js` — interaction layer  
+- `skillsGlobe.js` — 3D visualization  
+- `utils.js` — shared utilities  
 
 ---
 
@@ -95,7 +49,7 @@ An end-to-end pipeline using fully synthetic data.
 
 ```text
 portfolio/
-├── assets/              # Images, media
+├── assets/
 ├── css/
 │   ├── base.css
 │   ├── layout.css
@@ -105,12 +59,10 @@ portfolio/
 ├── js/
 │   ├── main.js
 │   ├── scrollEngine.js
-│   ├── tiltSystem.js
 │   ├── cursorEffects.js
+│   ├── skillsGlobe.js
 │   └── utils.js
 ├── index.html
-├── script_backup.js     # Old monolithic backup
-├── style_backup.css     # Old monolithic backup
 └── README.md
 ```
 
@@ -118,30 +70,30 @@ portfolio/
 
 ## 🚀 Getting Started
 
-```bash
-git clone https://github.com/Jonathan-Jesni/portfolio.git
-```
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/Jonathan-Jesni/portfolio.git](https://github.com/Jonathan-Jesni/portfolio.git)
+   cd portfolio
+   ```
 
-### Run locally:
-
-* Open using **Live Server** or any HTTP server
-* (ES modules require HTTP — won’t work via file://)
+2. **Run locally:**
+   Use Live Server or any HTTP server.
+   > **Note:** ES modules require a local HTTP server to run properly (they won’t work simply by opening the `file://` path in your browser).
 
 ---
 
-## 📬 Contact
+## 📬 Contact & Links
 
-* **GitHub:** https://github.com/Jonathan-Jesni
-* **LinkedIn:** https://www.linkedin.com/in/jonathan-jesni-b0184a210/
+* 🌐 **Portfolio:** [jonathanjesni.com](https://jonathanjesni.com)
+* 💻 **GitHub:** [Jonathan-Jesni](https://github.com/Jonathan-Jesni)
+* 🔗 **LinkedIn:** [Jonathan Jesni](https://www.linkedin.com/in/jonathan-jesni-b0184a210/)
 
 ---
 
 ## 🧾 Notes
 
-* Original monolithic files are preserved as backups
-* Project is fully modularized and optimized
-* Ready for deployment
+* Fully modularized (migrated from monolithic setup)
+* Optimized for performance and responsiveness across devices
+* Production-ready
 
----
-
-**Built with precision, performance, and real-world focus.**
+*Built with precision, performance, and real-world focus.*
