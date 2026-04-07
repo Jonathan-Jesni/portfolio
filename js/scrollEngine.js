@@ -1,7 +1,7 @@
 // ============================================
 // SCROLL-SYNCED ANIMATION ENGINE
 // ============================================
-import { seededRandom, easeOutCubic, easeOutQuart, isMobile } from './utils.js';
+import { seededRandom, easeOutCubic, easeOutQuart, isMobile, prefersReducedMotion } from './utils.js';
 
 const scrollElements = [];
 
@@ -117,7 +117,7 @@ export function registerElements() {
     item.el.classList.add('accelerate');
 
     const rect = item.el.getBoundingClientRect();
-    if (rect.top < viewportThreshold) {
+    if (prefersReducedMotion || rect.top < viewportThreshold) {
       // Snap lerp state to fully visible
       item.sx = 0;
       item.sy = 0;
@@ -193,6 +193,8 @@ function getIdleFloat(index, time) {
 const mobileFactor = isMobile ? 0.5 : 1;
 
 export function applyScrollTransforms(scrollY, viewportHeight, time) {
+  if (prefersReducedMotion) return;
+
   const lerpFactor = isMobile ? 0.14 : 0.09;
   // Idle blend: ramp up floating when scroll stops
   const idleBlend = isScrolling ? 0 : Math.min(scrollIdleTimer * 0.3, 1);
@@ -299,6 +301,8 @@ export function applyScrollTransforms(scrollY, viewportHeight, time) {
 // DEPTH LAYER PARALLAX
 // ============================================
 export function applyDepthLayers(scrollY) {
+  if (prefersReducedMotion) return;
+
   // Background (body::before): 0.1x — handled via CSS var
   document.body.style.setProperty('--scrollY', (scrollY * 0.1) + 'px');
 

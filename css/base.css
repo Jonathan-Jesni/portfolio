@@ -114,3 +114,17 @@ strong {
 .accelerate {
   will-change: opacity;
 }
+
+/* ============================================
+   REDUCED MOTION FALLBACK
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .cursor-glow, .cursor-trail {
+    display: none !important;
+  }
+}

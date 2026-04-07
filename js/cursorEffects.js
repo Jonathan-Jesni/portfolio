@@ -1,7 +1,7 @@
 // ============================================
 // CURSOR EFFECTS (glow, trail, magnetic buttons, spotlight)
 // ============================================
-import { seededRandom } from './utils.js';
+import { seededRandom, prefersReducedMotion } from './utils.js';
 
 // Shared mouse state object — written by mousemove, read by all systems
 export const mouseState = {
@@ -28,6 +28,8 @@ let lastSpotlightVal = '0';
 const btnStates = [];
 
 export function initCursorEffects(smoothVelocityGetter) {
+  if (prefersReducedMotion) return;
+
   // Mouse tracking
   window.addEventListener('mousemove', (e) => {
     mouseState.mouseX = e.clientX;
@@ -89,6 +91,8 @@ function spawnTrail() {
 }
 
 export function updateCursorEffects() {
+  if (prefersReducedMotion) return;
+
   const { mouseX, mouseY } = mouseState;
 
   // 1. Cursor glow

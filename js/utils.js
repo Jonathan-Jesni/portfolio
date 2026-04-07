@@ -19,3 +19,4 @@ export function easeOutQuart(t) {
 
 // Device detection
 export const isMobile = matchMedia('(pointer: coarse)').matches;
+export const prefersReducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;

@@ -1,7 +1,7 @@
 // ============================================
 // MAIN ENTRY POINT — single rAF loop orchestrator
 // ============================================
-import { isMobile } from './utils.js';
+import { isMobile, prefersReducedMotion } from './utils.js';
 import {
   registerElements,
   updateCachedPositions,
@@ -21,6 +21,14 @@ import { initCursorEffects, updateCursorEffects } from './cursorEffects.js';
   const loader = document.getElementById('intro-loader');
   const greetingEl = document.getElementById('greeting-text');
   if (!loader || !greetingEl) return;
+
+  if (prefersReducedMotion) {
+    loader.classList.add('loader-done');
+    document.body.classList.remove('loading');
+    document.body.classList.add('intro-done');
+    loader.remove();
+    return;
+  }
 
   const greetings = [
     'initializing system',
@@ -189,7 +197,9 @@ function mainLoop(timestamp) {
 
   if (!isMobile) {
     updateActiveProject();
-    updateCursorEffects();
+    if (!prefersReducedMotion) {
+      updateCursorEffects();
+    }
   }
 
   requestAnimationFrame(mainLoop);
@@ -199,7 +209,7 @@ function mainLoop(timestamp) {
 // DESKTOP-ONLY EFFECTS
 // (cursor trail, magnetic buttons, 3D tilt, spotlight)
 // ============================================
-if (!isMobile) {
+if (!isMobile && !prefersReducedMotion) {
   initCursorEffects(() => smoothVelocity);
 }
 
