@@ -307,15 +307,15 @@
 
         <!-- View Toggle UI -->
         <div class="skills-view-toggle mono">
-          <span class="toggle-btn active" data-view="system">[ system ]</span>
-          <span class="toggle-btn" data-view="visual">[ visual ]</span>
+          <span class="toggle-btn" data-view="system">[ system ]</span>
+          <span class="toggle-btn active" data-view="visual">[ visual ]</span>
         </div>
         <span class="heading-line" style="flex-basis: 100%; margin-top: -30px; display: none;"></span>
       </h2>
 
       <div class="skills-container">
         <!-- SYSTEM VIEW (Original Structure) -->
-        <div class="skills-view system-view active" id="view-system">
+        <div class="skills-view system-view" id="view-system">
           <div class="skills-grid reveal">
             <div class="skill-category" id="skill-languages">
               <h3 class="skill-category-title">
@@ -467,7 +467,7 @@
         </div> <!-- End System View -->
 
         <!-- VISUAL VIEW (Skills Globe) -->
-        <div class="skills-view visual-view" id="view-visual">
+        <div class="skills-view visual-view active" id="view-visual">
           <div class="skills-globe">
             <canvas id="skills-globe-canvas"></canvas>
             <div id="globe-tooltip" class="globe-tooltip"></div>

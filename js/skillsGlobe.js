@@ -122,6 +122,7 @@
     let renderProgress = 0;
     let viewTransition = 0;
     let wasModeActive = false;
+    let hasRevealedCanvas = false;
 
     // ---- Fibonacci Sphere Distribution ----
     const nodes = [];
@@ -562,6 +563,11 @@
         } else {
           tooltip.classList.remove('show');
         }
+      }
+
+      if (!hasRevealedCanvas) {
+        hasRevealedCanvas = true;
+        canvas.classList.add('loaded');
       }
 
       animId = requestAnimationFrame(render);
