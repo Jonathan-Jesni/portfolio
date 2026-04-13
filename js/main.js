@@ -166,39 +166,51 @@ window.addEventListener('resize', () => {
 // ============================================
 let lastLoopScrollY = -1;
 let animationTime = 0;
+let lastTime = 0;
+let smoothScrollY = window.scrollY;
 
 function mainLoop(timestamp) {
+  const rawDt = lastTime ? (timestamp - lastTime) / 1000 : 1 / 60;
+  const dt = Math.max(1 / 240, Math.min(0.05, rawDt));
+  lastTime = timestamp;
+
   const scrollY = window.scrollY;
   const viewportHeight = window.innerHeight;
   animationTime = timestamp * 0.001; // Convert to seconds
 
   // Update scroll velocity state
-  updateScrollState(scrollY);
+  updateScrollState(scrollY, dt);
+  window.__scrollVel = smoothVelocity;
+  window.__frameDt = dt;
+
+  // Symmetric smooth scrolling in both directions
+  smoothScrollY += (scrollY - smoothScrollY) * 0.08;
+  if (Math.abs(scrollY - smoothScrollY) < 0.01) smoothScrollY = scrollY;
 
   // Recalculate on scroll change
-  if (scrollY !== lastLoopScrollY) {
+  if (Math.abs(smoothScrollY - lastLoopScrollY) > 0.01) {
     // Navbar
     if (navbar) {
-      if (scrollY > 50) navbar.classList.add('scrolled');
+      if (smoothScrollY > 50) navbar.classList.add('scrolled');
       else navbar.classList.remove('scrolled');
     }
 
     // Depth-layered parallax
-    applyDepthLayers(scrollY);
+    applyDepthLayers(smoothScrollY);
 
-    lastLoopScrollY = scrollY;
+    lastLoopScrollY = smoothScrollY;
   }
 
   // Always apply transforms (idle float needs continuous updates)
-  applyScrollTransforms(scrollY, viewportHeight, animationTime);
+  applyScrollTransforms(smoothScrollY, viewportHeight, animationTime, dt);
 
   // Dynamic progress bar
-  updateProgressBar(scrollY, viewportHeight, progressBar);
+  updateProgressBar(smoothScrollY, viewportHeight, progressBar, dt);
 
   if (!isMobile) {
     updateActiveProject();
     if (!prefersReducedMotion) {
-      updateCursorEffects();
+      updateCursorEffects(dt);
     }
   }
 
@@ -219,6 +231,8 @@ if (!isMobile && !prefersReducedMotion) {
 window.addEventListener('load', () => {
   registerElements();
   lastLoopScrollY = -1;
+  smoothScrollY = window.scrollY;
+  lastTime = 0;
   requestAnimationFrame(mainLoop);
 });
 
@@ -228,6 +242,7 @@ if (document.readyState === 'complete') {
   document.addEventListener('DOMContentLoaded', () => {
     registerElements();
     lastLoopScrollY = -1;
+    smoothScrollY = window.scrollY;
   });
 
   // CRITICAL: Re-calculate positions after all images load and claim layout space

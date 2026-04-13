@@ -1,7 +1,7 @@
 // ============================================
 // SCROLL-SYNCED ANIMATION ENGINE
 // ============================================
-import { seededRandom, easeOutCubic, easeOutQuart, isMobile, prefersReducedMotion } from './utils.js';
+import { seededRandom, isMobile, prefersReducedMotion } from './utils.js';
 
 const scrollElements = [];
 
@@ -9,7 +9,7 @@ const scrollElements = [];
 // SCROLL VELOCITY TRACKER (shared state)
 // ============================================
 let scrollVelocity = 0;
-let lastScrollY = 0;
+let lastScrollY = window.scrollY || 0;
 export let smoothVelocity = 0;
 let isScrolling = false;
 let scrollIdleTimer = 0;
@@ -173,7 +173,11 @@ function getElementProgress(item, scrollY, viewportHeight) {
   if (distance < -range * 0.35) return 1;
 
   const raw = 1 - Math.max(0, distance / range);
-  return easeOutQuart(Math.max(0, Math.min(1, raw)));
+  return ease(Math.max(0, Math.min(1, raw)));
+}
+
+function ease(t) {
+  return 1 - Math.pow(1 - t, 3);
 }
 
 // ============================================
@@ -192,10 +196,11 @@ function getIdleFloat(index, time) {
 // ============================================
 const mobileFactor = isMobile ? 0.5 : 1;
 
-export function applyScrollTransforms(scrollY, viewportHeight, time) {
+export function applyScrollTransforms(scrollY, viewportHeight, time, dt = 1 / 60) {
   if (prefersReducedMotion) return;
 
-  const lerpFactor = isMobile ? 0.14 : 0.09;
+  const baseLerpFactor = isMobile ? 0.14 : 0.09;
+  const lerpFactor = 1 - Math.pow(1 - baseLerpFactor, dt * 60);
   // Idle blend: ramp up floating when scroll stops
   const idleBlend = isScrolling ? 0 : Math.min(scrollIdleTimer * 0.3, 1);
 
@@ -222,7 +227,7 @@ export function applyScrollTransforms(scrollY, viewportHeight, time) {
     if ((item.type === 'stagger' || item.type === 'skill') && item.staggerIndex > 0) {
       const staggerDelay = item.staggerIndex * (isMobile ? 0.045 : 0.07);
       progress = Math.max(0, Math.min(1, (progress - staggerDelay) / (1 - staggerDelay)));
-      progress = easeOutCubic(progress);
+      progress = ease(progress);
     }
 
     // No reveal lock — progress tracks scroll position bidirectionally
@@ -313,30 +318,40 @@ export function applyDepthLayers(scrollY) {
 // ============================================
 // UPDATE SCROLL STATE (called from main loop)
 // ============================================
-export function updateScrollState(scrollY) {
-  scrollVelocity = scrollY - lastScrollY;
-  smoothVelocity += (scrollVelocity - smoothVelocity) * 0.2;
+export function updateScrollState(scrollY, dt = 1 / 60) {
+  const raw = scrollY - lastScrollY;
+
+  // Normalize + smooth velocity to avoid snapping when direction changes.
+  scrollVelocity = raw * 0.1;
+  smoothVelocity += (scrollVelocity - smoothVelocity) * 0.08;
+
+  // Idle decay keeps motion alive while settling naturally.
+  if (Math.abs(scrollVelocity) < 0.001) {
+    smoothVelocity *= 0.92;
+  }
+
   lastScrollY = scrollY;
 
   // Detect idle state
-  if (Math.abs(scrollVelocity) > 1) {
+  if (Math.abs(scrollVelocity) > 0.02) {
     isScrolling = true;
     scrollIdleTimer = 0;
   } else {
     isScrolling = false;
-    scrollIdleTimer += 0.016; // ~1 frame at 60fps
+    scrollIdleTimer += dt;
   }
 }
 
 // ============================================
 // SCROLL PROGRESS BAR
 // ============================================
-export function updateProgressBar(scrollY, viewportHeight, progressBar) {
+export function updateProgressBar(scrollY, viewportHeight, progressBar, dt = 1 / 60) {
   const docHeight = document.body.scrollHeight - viewportHeight;
   scrollProgressTarget = docHeight > 0 ? (scrollY / docHeight) * 100 : 0;
 
   const progressDelta = scrollProgressTarget - scrollProgressCurrent;
-  const progressSpeed = 0.08 + Math.min(Math.abs(progressDelta) * 0.005, 0.15);
+  const baseProgressSpeed = 0.08 + Math.min(Math.abs(progressDelta) * 0.005, 0.15);
+  const progressSpeed = 1 - Math.pow(1 - baseProgressSpeed, dt * 60);
   scrollProgressCurrent += progressDelta * progressSpeed;
 
   if (Math.abs(progressDelta) < 0.05) {

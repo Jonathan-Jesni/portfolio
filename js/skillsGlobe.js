@@ -301,6 +301,11 @@
 
       var combinedAlpha = renderProgress * viewTransition;
 
+      if (!hasRevealedCanvas && combinedAlpha > 0.2) {
+        canvas.classList.add('loaded');
+        hasRevealedCanvas = true;
+      }
+
       // Container-based scale fix:
       var containerWidth = canvas.parentElement.clientWidth;
       var safeWidth = containerWidth - 80;
@@ -315,11 +320,15 @@
       ctx.clearRect(0, 0, w, h);
 
       // ---- Rotation ----
+      const dt = Math.max(1 / 240, Math.min(0.05, window.__frameDt || 1 / 60));
+      const frameScale = dt * 60;
       if (!isDragging) {
-        dragVelX *= 0.95;
-        dragVelY *= 0.95;
-        rotX += dragVelX + 0.0015;
-        rotY += dragVelY + 0.002 + Math.sin(rotX) * 0.0005;
+        dragVelX *= Math.pow(0.95, frameScale);
+        dragVelY *= Math.pow(0.95, frameScale);
+        rotX += (dragVelX + 0.0015) * frameScale;
+        const vel = Math.max(-2, Math.min(2, window.__scrollVel || 0));
+        const scrollBoost = vel * 0.002;
+        rotY += (dragVelY + 0.002 + Math.sin(rotX) * 0.0005 + scrollBoost) * frameScale;
       }
 
       // ---- Transform nodes ----
@@ -563,11 +572,6 @@
         } else {
           tooltip.classList.remove('show');
         }
-      }
-
-      if (!hasRevealedCanvas) {
-        hasRevealedCanvas = true;
-        canvas.classList.add('loaded');
       }
 
       animId = requestAnimationFrame(render);

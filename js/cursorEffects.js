@@ -90,14 +90,19 @@ function spawnTrail() {
   }
 }
 
-export function updateCursorEffects() {
+export function updateCursorEffects(dt = 1 / 60) {
   if (prefersReducedMotion) return;
+
+  const safeDt = Math.max(1 / 240, Math.min(0.05, dt || 1 / 60));
+  const glowLerp = 1 - Math.pow(0.001, safeDt);
+  const trailLerp = 1 - Math.pow(1 - 0.04, safeDt * 60);
+  const magneticLerp = 1 - Math.pow(1 - 0.08, safeDt * 60);
 
   const { mouseX, mouseY } = mouseState;
 
   // 1. Cursor glow
-  glowX += (mouseX - glowX) * 0.12;
-  glowY += (mouseY - glowY) * 0.12;
+  glowX += (mouseX - glowX) * glowLerp;
+  glowY += (mouseY - glowY) * glowLerp;
   cursorGlow.style.left = glowX + 'px';
   cursorGlow.style.top = glowY + 'px';
 
@@ -107,13 +112,13 @@ export function updateCursorEffects() {
   for (let i = 0; i < TRAIL_COUNT; i++) {
     const trail = trails[i];
     if (trail.life > 0) {
-      trail.ix += (mouseX - trail.ix) * 0.04;
-      trail.iy += (mouseY - trail.iy) * 0.04;
+      trail.ix += (mouseX - trail.ix) * trailLerp;
+      trail.iy += (mouseY - trail.iy) * trailLerp;
       trail.el.style.left = trail.ix + 'px';
       trail.el.style.top = trail.iy + 'px';
 
       const fadeSpeed = 0.022 + (1 - trail.size / 50) * 0.01;
-      trail.life -= fadeSpeed;
+      trail.life -= fadeSpeed * (safeDt * 60);
       if (trail.life <= 0) {
         trail.life = 0;
         trail.el.style.opacity = '0';
@@ -124,8 +129,8 @@ export function updateCursorEffects() {
   }
 
   // 3. Spotlight (smoothed mouse position for jitter-free tracking)
-  smoothMouseX += (mouseX - smoothMouseX) * 0.12;
-  smoothMouseY += (mouseY - smoothMouseY) * 0.12;
+  smoothMouseX += (mouseX - smoothMouseX) * glowLerp;
+  smoothMouseY += (mouseY - smoothMouseY) * glowLerp;
   if (!spotlightActive && (mouseX !== 0 || mouseY !== 0)) {
     spotlightActive = true;
   }
@@ -165,9 +170,9 @@ export function updateCursorEffects() {
       b.ts = 1;
     }
 
-    b.cx += (b.tx - b.cx) * 0.08;
-    b.cy += (b.ty - b.cy) * 0.08;
-    b.cs += (b.ts - b.cs) * 0.08;
+    b.cx += (b.tx - b.cx) * magneticLerp;
+    b.cy += (b.ty - b.cy) * magneticLerp;
+    b.cs += (b.ts - b.cs) * magneticLerp;
 
     if (Math.abs(b.cx) < 0.05 && Math.abs(b.cy) < 0.05 && Math.abs(b.cs - 1) < 0.001) {
       b.cx = 0;
