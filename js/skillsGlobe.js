@@ -94,6 +94,7 @@
   };
 
   const accentColor = { r: 100, g: 255, b: 218 };
+  let scrollInfluence = 0;
 
   function initSkillsGlobe() {
     const canvas = document.getElementById('skills-globe-canvas');
@@ -326,8 +327,10 @@
         dragVelX *= Math.pow(0.95, frameScale);
         dragVelY *= Math.pow(0.95, frameScale);
         rotX += (dragVelX + 0.0015) * frameScale;
-        const vel = Math.max(-2, Math.min(2, window.__scrollVel || 0));
-        const scrollBoost = vel * 0.002;
+        const rawVel = window.__scrollVel || 0;
+        const vel = Math.max(-4, Math.min(4, rawVel));
+        scrollInfluence += (vel - scrollInfluence) * 0.08;
+        const scrollBoost = scrollInfluence * 0.003;
         rotY += (dragVelY + 0.002 + Math.sin(rotX) * 0.0005 + scrollBoost) * frameScale;
       }
 

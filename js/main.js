@@ -184,7 +184,8 @@ function mainLoop(timestamp) {
   window.__frameDt = dt;
 
   // Symmetric smooth scrolling in both directions
-  smoothScrollY += (scrollY - smoothScrollY) * 0.08;
+  const scrollLerp = 1 - Math.pow(1 - 0.08, dt * 60);
+  smoothScrollY += (scrollY - smoothScrollY) * scrollLerp;
   if (Math.abs(scrollY - smoothScrollY) < 0.01) smoothScrollY = scrollY;
 
   // Recalculate on scroll change
