@@ -13,7 +13,7 @@ Built with **clean architecture, custom animation systems, and zero-framework pe
 
 ## 🌐 Live Demo
 
-👉 **[https://jonathanjesni.com](https://jonathanjesni.com)**
+👉 **[https://jonathanjesni.vercel.app](https://jonathanjesni.vercel.app)**
 
 ---
 
